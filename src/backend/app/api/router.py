@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import health, startup_validation, financial_reports, forecasting
+from app.api.routes import health, startup_validation, financial_reports, forecasting, market_intelligence
 
 api_router = APIRouter()
 
@@ -13,4 +13,7 @@ api_router.include_router(
 )
 api_router.include_router(
     forecasting.router, prefix="/forecasting", tags=["Forecasting"]
+)
+api_router.include_router(
+    market_intelligence.router, prefix="/market", tags=["Market Intelligence"]
 )

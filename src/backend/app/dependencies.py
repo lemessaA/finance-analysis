@@ -3,20 +3,20 @@ from __future__ import annotations
 from typing import Annotated
 
 from fastapi import Depends
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 
 from app.config import Settings, get_settings
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 
 
-def get_llm(settings: SettingsDep) -> ChatOpenAI:
-    """Provide a ChatOpenAI instance as a FastAPI dependency."""
-    return ChatOpenAI(
-        model=settings.OPENAI_MODEL,
-        temperature=settings.OPENAI_TEMPERATURE,
-        api_key=settings.OPENAI_API_KEY,
+def get_llm(settings: SettingsDep) -> ChatGroq:
+    """Provide a ChatGroq instance as a FastAPI dependency."""
+    return ChatGroq(
+        model=settings.GROQ_MODEL,
+        temperature=settings.GROQ_TEMPERATURE,
+        api_key=settings.GROQ_API_KEY,
     )
 
 
-LLMDep = Annotated[ChatOpenAI, Depends(get_llm)]
+LLMDep = Annotated[ChatGroq, Depends(get_llm)]

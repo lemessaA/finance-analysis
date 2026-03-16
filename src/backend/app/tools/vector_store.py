@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
@@ -24,7 +24,7 @@ def build_vector_store(texts: List[str], metadatas: List[dict] | None = None) ->
 
     logger.info(f"Building vector store with {len(docs)} chunks from {len(texts)} documents")
 
-    embeddings = OpenAIEmbeddings(api_key=settings.OPENAI_API_KEY)
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     store = FAISS.from_documents(docs, embeddings)
     return store
 

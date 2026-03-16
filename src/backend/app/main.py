@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.api.router import api_router
 from app.config import settings
 from app.utils.logger import setup_logger
@@ -16,7 +15,7 @@ logger = setup_logger(__name__)
 async def lifespan(app: FastAPI):  # noqa: ARG001
     logger.info(f"🚀 Starting {settings.APP_NAME} v{settings.VERSION}")
     logger.info(f"   Environment : {settings.ENVIRONMENT}")
-    logger.info(f"   OpenAI model: {settings.OPENAI_MODEL}")
+    logger.info(f"   Groq model: {settings.GROQ_MODEL}")
     yield
     logger.info("👋 Shutting down AI Business Intelligence Platform...")
 

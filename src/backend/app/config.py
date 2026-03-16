@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     # ── LLM ───────────────────────────────────────────────────
-    OPENAI_API_KEY: str = ""
-    OPENAI_MODEL: str = "gpt-4o"
-    OPENAI_TEMPERATURE: float = 0.0
+    GROQ_API_KEY: str = "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"
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
+    GROQ_TEMPERATURE: float = 0.0
 
     # ── Search ────────────────────────────────────────────────
     TAVILY_API_KEY: str = ""

@@ -1,0 +1,448 @@
+nohup: ignoring input
+INFO:     Will watch for changes in these directories: ['/home/lemessa-ahmed/Startup-to-Business/src/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [15634] using WatchFiles
+INFO:     Started server process [15638]
+INFO:     Waiting for application startup.
+2026-03-16 21:41:57 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 21:41:57 | INFO     | app.main |    Environment : development
+2026-03-16 21:41:57 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+INFO:     127.0.0.1:46664 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46664 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50536 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51432 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51432 - "GET /openapi.json HTTP/1.1" 200 OK
+2026-03-16 21:53:01 | INFO     | app.api.routes.startup_validation | Validating startup idea: An AI platform for predicting supply chain disruptions in ma...
+2026-03-16 21:53:01 | INFO     | app.workflows.startup_validator_graph | Graph node: market_research_node
+2026-03-16 21:53:01 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: An AI platform for predicting supply chain disrupt
+2026-03-16 21:53:01 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 21:53:05 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 21:53:05 | INFO     | app.workflows.startup_validator_graph | Graph node: competitor_analysis_node
+2026-03-16 21:53:05 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: An AI platform for predicting supply chain disrupt
+2026-03-16 21:53:05 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 21:53:08 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 21:53:08 | INFO     | app.workflows.startup_validator_graph | Graph node: decision_node
+2026-03-16 21:53:08 | INFO     | agent.DecisionAgent | [DecisionAgent] Starting: final decision synthesis
+2026-03-16 21:53:10 | INFO     | agent.DecisionAgent | [DecisionAgent] Completed: final decision synthesis
+2026-03-16 21:53:10 | INFO     | app.api.routes.startup_validation | Startup scored: A (composite=82.2, verdict=GO)
+INFO:     127.0.0.1:47676 - "POST /api/v1/startup/validate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47882 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:47882 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:47882 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:46880 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+WARNING:  WatchFiles detected changes in 'app/schemas/market.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:09:34 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [15638]
+INFO:     Started server process [24283]
+INFO:     Waiting for application startup.
+2026-03-16 22:09:45 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:09:45 | INFO     | app.main |    Environment : development
+2026-03-16 22:09:45 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/routes/market_intelligence.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:09:47 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24283]
+INFO:     Started server process [24306]
+INFO:     Waiting for application startup.
+2026-03-16 22:09:51 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:09:51 | INFO     | app.main |    Environment : development
+2026-03-16 22:09:51 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/router.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:10:11 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24306]
+INFO:     Started server process [24330]
+INFO:     Waiting for application startup.
+2026-03-16 22:10:15 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:10:15 | INFO     | app.main |    Environment : development
+2026-03-16 22:10:15 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/tests/test_market_api.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:10:21 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24330]
+INFO:     Started server process [24351]
+INFO:     Waiting for application startup.
+2026-03-16 22:10:26 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:10:26 | INFO     | app.main |    Environment : development
+2026-03-16 22:10:26 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+INFO:     127.0.0.1:48630 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:44512 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51470 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 200 OK
+2026-03-16 22:21:03 | INFO     | app.api.routes.startup_validation | Validating startup idea: software developer...
+2026-03-16 22:21:03 | INFO     | app.workflows.startup_validator_graph | Graph node: market_research_node
+2026-03-16 22:21:03 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: software developer
+2026-03-16 22:21:03 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:21:08 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:21:08 | INFO     | app.workflows.startup_validator_graph | Graph node: competitor_analysis_node
+2026-03-16 22:21:08 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: software developer
+2026-03-16 22:21:08 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:21:10 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:21:10 | INFO     | app.workflows.startup_validator_graph | Graph node: decision_node
+2026-03-16 22:21:10 | INFO     | agent.DecisionAgent | [DecisionAgent] Starting: final decision synthesis
+2026-03-16 22:21:12 | INFO     | agent.DecisionAgent | [DecisionAgent] Completed: final decision synthesis
+2026-03-16 22:21:12 | INFO     | app.api.routes.startup_validation | Startup scored: C (composite=64.5, verdict=GO)
+INFO:     127.0.0.1:51480 - "POST /api/v1/startup/validate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37464 - "OPTIONS /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:21:41 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: software tech in Global
+2026-03-16 22:21:41 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General software tech market analysis
+2026-03-16 22:21:41 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:21:41 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General software tech market analysis
+2026-03-16 22:21:41 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:21:45 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:21:45 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:21:45 | ERROR    | app.api.routes.market_intelligence | Market intelligence failed: 'str' object has no attribute 'get_secret_value'
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/api/routes/market_intelligence.py", line 50, in analyze_market
+    api_key=settings.GROQ_API_KEY.get_secret_value()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get_secret_value'
+INFO:     127.0.0.1:37476 - "POST /api/v1/market/analyze HTTP/1.1" 500 Internal Server Error
+WARNING:  WatchFiles detected changes in 'app/api/routes/market_intelligence.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:23:29 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24351]
+INFO:     Started server process [27801]
+INFO:     Waiting for application startup.
+2026-03-16 22:23:34 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:23:34 | INFO     | app.main |    Environment : development
+2026-03-16 22:23:34 | INFO     | app.main |    Groq model: llama-3.3-70b-versatile
+INFO:     Application startup complete.
+INFO:     127.0.0.1:33318 - "OPTIONS /api/v1/market/analyze HTTP/1.1" 405 Method Not Allowed
+2026-03-16 22:24:08 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: tech in global
+2026-03-16 22:24:08 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General tech market analysis
+2026-03-16 22:24:08 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:24:08 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General tech market analysis
+2026-03-16 22:24:08 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:24:11 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:24:11 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:24:13 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:42842 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:25:24 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: Saas in Global
+2026-03-16 22:25:24 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General Saas market analysis
+2026-03-16 22:25:24 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:25:24 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General Saas market analysis
+2026-03-16 22:25:24 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:25:28 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:25:28 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:25:30 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:50968 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:26:10 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: electric vehcle in Global
+2026-03-16 22:26:10 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General electric vehcle market analysis
+2026-03-16 22:26:10 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:26:10 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General electric vehcle market analysis
+2026-03-16 22:26:10 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:26:14 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:26:14 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:26:16 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:53894 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:31:42 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 22:31:43 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 22:31:45 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Completed: financial analysis
+INFO:     127.0.0.1:40426 - "POST /api/v1/financial/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49850 - "OPTIONS /api/v1/forecasting/forecast HTTP/1.1" 200 OK
+2026-03-16 22:35:59 | INFO     | app.api.routes.forecasting | Forecasting Revenue — 8 historical points → 4 periods ahead
+2026-03-16 22:35:59 | INFO     | app.services.forecasting_service | Auto-selected model: polynomial (R²=0.548)
+2026-03-16 22:35:59 | INFO     | agent.ForecastingAgent | [ForecastingAgent] Starting: forecast interpretation for Revenue
+2026-03-16 22:36:01 | INFO     | agent.ForecastingAgent | [ForecastingAgent] Completed: forecast interpretation
+INFO:     127.0.0.1:49860 - "POST /api/v1/forecasting/forecast HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36062 - "OPTIONS /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:36:38 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: saas in Global
+2026-03-16 22:36:39 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General saas market analysis
+2026-03-16 22:36:39 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:36:39 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General saas market analysis
+2026-03-16 22:36:39 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:36:42 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:36:42 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:36:44 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:36064 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:36:53 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: car in Global
+2026-03-16 22:36:53 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General car market analysis
+2026-03-16 22:36:53 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:36:53 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General car market analysis
+2026-03-16 22:36:53 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:36:57 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:36:57 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:36:59 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:54878 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:37:15 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: coffe in Global
+2026-03-16 22:37:15 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General coffe market analysis
+2026-03-16 22:37:15 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:37:15 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General coffe market analysis
+2026-03-16 22:37:15 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:37:18 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:37:19 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:37:20 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:42404 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:39:03 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: hotel in Ethiopia
+2026-03-16 22:39:04 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General hotel market analysis
+2026-03-16 22:39:04 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:39:04 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General hotel market analysis
+2026-03-16 22:39:04 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:39:07 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:39:08 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:39:10 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:55712 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:42:28 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 22:42:29 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 22:42:32 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Completed: financial analysis
+INFO:     127.0.0.1:59472 - "POST /api/v1/financial/analyze HTTP/1.1" 200 OK
+2026-03-16 22:46:37 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 22:46:37 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 22:46:39 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Completed: financial analysis
+INFO:     127.0.0.1:50382 - "POST /api/v1/financial/analyze HTTP/1.1" 200 OK
+2026-03-16 22:46:54 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 22:46:54 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 22:46:56 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Completed: financial analysis
+INFO:     127.0.0.1:58286 - "POST /api/v1/financial/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41396 - "POST /api/reports/analyze HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52422 - "POST /api/v1/financial-reports/analyze HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35442 - "OPTIONS /api/v1/startup/validate HTTP/1.1" 200 OK
+2026-03-16 22:51:35 | INFO     | app.api.routes.startup_validation | Validating startup idea: software developer...
+2026-03-16 22:51:35 | INFO     | app.workflows.startup_validator_graph | Graph node: market_research_node
+2026-03-16 22:51:35 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: software developer
+2026-03-16 22:51:35 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:51:38 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:51:38 | INFO     | app.workflows.startup_validator_graph | Graph node: competitor_analysis_node
+2026-03-16 22:51:38 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: software developer
+2026-03-16 22:51:38 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:51:43 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:51:43 | INFO     | app.workflows.startup_validator_graph | Graph node: decision_node
+2026-03-16 22:51:43 | INFO     | agent.DecisionAgent | [DecisionAgent] Starting: final decision synthesis
+2026-03-16 22:51:43 | INFO     | app.api.routes.financial_reports | Processing PDF: sample_report.pdf (0.0 KB)
+2026-03-16 22:51:43 | ERROR    | app.services.pdf_service | PDF extraction error: Failed to open stream
+2026-03-16 22:51:43 | ERROR    | app.api.routes.financial_reports | PDF analysis failed: Failed to open stream
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/pymupdf/__init__.py", line 2967, in __init__
+    doc = mupdf.fz_open_document_with_stream(filetype if filetype else '', stream2)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/pymupdf/mupdf.py", line 50812, in fz_open_document_with_stream
+    return _mupdf.fz_open_document_with_stream(magic, stream)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pymupdf.mupdf.FzErrorFormat: code=7: no objects found
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/api/routes/financial_reports.py", line 46, in analyze_financial_report
+    result = await extract_financial_metrics(content, filename=file.filename or "report.pdf")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/services/extraction_service.py", line 17, in extract_financial_metrics
+    text, page_count = _extract(content)
+                       ^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/services/pdf_service.py", line 20, in _extract
+    doc = fitz.open(stream=io.BytesIO(content), filetype="pdf")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/pymupdf/__init__.py", line 2970, in __init__
+    raise FileDataError('Failed to open stream') from e
+pymupdf.FileDataError: Failed to open stream
+INFO:     127.0.0.1:49392 - "POST /api/v1/financial/analyze HTTP/1.1" 500 Internal Server Error
+2026-03-16 22:51:44 | INFO     | agent.DecisionAgent | [DecisionAgent] Completed: final decision synthesis
+2026-03-16 22:51:44 | INFO     | app.api.routes.startup_validation | Startup scored: A (composite=82.2, verdict=GO)
+INFO:     127.0.0.1:35452 - "POST /api/v1/startup/validate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59224 - "OPTIONS /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:53:51 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: care solution in ethiopia
+2026-03-16 22:53:52 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General care solution market analysis
+2026-03-16 22:53:52 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:53:52 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General care solution market analysis
+2026-03-16 22:53:52 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:53:55 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:53:56 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:53:57 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:59226 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:56:25 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: software developer in ethiopia
+2026-03-16 22:56:26 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General software developer market analysis
+2026-03-16 22:56:26 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:56:26 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General software developer market analysis
+2026-03-16 22:56:26 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 22:56:29 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 22:56:29 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 22:56:32 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:34224 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 22:57:44 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 22:57:45 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 22:57:45 | ERROR    | app.api.routes.financial_reports | PDF analysis failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98542, Requested 4438. Please try again in 42m54.72s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/api/routes/financial_reports.py", line 46, in analyze_financial_report
+    result = await extract_financial_metrics(content, filename=file.filename or "report.pdf")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/services/extraction_service.py", line 20, in extract_financial_metrics
+    result: FinancialReportResponse = await _financial_agent.run(text=text, filename=filename)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/agents/financial_analysis_agent.py", line 53, in run
+    result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 3197, in ainvoke
+    input_ = await coro_with_context(part(), context, create_task=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 5708, in ainvoke
+    return await self.bound.ainvoke(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 425, in ainvoke
+    llm_result = await self.agenerate_prompt(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1134, in agenerate_prompt
+    return await self.agenerate(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1092, in agenerate
+    raise exceptions[0]
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1361, in _agenerate_with_cache
+    result = await self._agenerate(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_groq/chat_models.py", line 642, in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/resources/chat/completions.py", line 941, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1762, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1576, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98542, Requested 4438. Please try again in 42m54.72s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+INFO:     127.0.0.1:51618 - "POST /api/v1/financial/analyze HTTP/1.1" 500 Internal Server Error
+WARNING:  WatchFiles detected changes in 'app/config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:59:18 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [27801]
+WARNING:  WatchFiles detected changes in 'app/config.py'. Reloading...
+INFO:     Started server process [40049]
+INFO:     Waiting for application startup.
+2026-03-16 22:59:38 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 22:59:38 | INFO     | app.main |    Environment : development
+2026-03-16 22:59:38 | INFO     | app.main |    Groq model: openai/gpt-oss-120b
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 22:59:38 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [40049]
+INFO:     Started server process [40171]
+INFO:     Waiting for application startup.
+2026-03-16 23:00:00 | INFO     | app.main | 🚀 Starting AI Business Intelligence Platform v1.0.0
+2026-03-16 23:00:00 | INFO     | app.main |    Environment : development
+2026-03-16 23:00:00 | INFO     | app.main |    Groq model: openai/gpt-oss-120b
+INFO:     Application startup complete.
+INFO:     127.0.0.1:45706 - "OPTIONS /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 23:00:00 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: Artificial Intelligence in GlobalNorth America
+2026-03-16 23:00:01 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General Artificial Intelligence market analysis
+2026-03-16 23:00:01 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 23:00:01 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General Artificial Intelligence market analysis
+2026-03-16 23:00:01 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 23:00:08 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 23:00:08 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 23:00:45 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:60040 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 23:00:52 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 23:00:53 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 23:00:53 | ERROR    | app.api.routes.financial_reports | PDF analysis failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98325, Requested 4438. Please try again in 39m47.232s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/api/routes/financial_reports.py", line 46, in analyze_financial_report
+    result = await extract_financial_metrics(content, filename=file.filename or "report.pdf")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/services/extraction_service.py", line 20, in extract_financial_metrics
+    result: FinancialReportResponse = await _financial_agent.run(text=text, filename=filename)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/agents/financial_analysis_agent.py", line 53, in run
+    result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 3197, in ainvoke
+    input_ = await coro_with_context(part(), context, create_task=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 5708, in ainvoke
+    return await self.bound.ainvoke(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 425, in ainvoke
+    llm_result = await self.agenerate_prompt(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1134, in agenerate_prompt
+    return await self.agenerate(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1092, in agenerate
+    raise exceptions[0]
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1361, in _agenerate_with_cache
+    result = await self._agenerate(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_groq/chat_models.py", line 642, in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/resources/chat/completions.py", line 941, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1762, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1576, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98325, Requested 4438. Please try again in 39m47.232s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+INFO:     127.0.0.1:56798 - "POST /api/v1/financial/analyze HTTP/1.1" 500 Internal Server Error
+2026-03-16 23:02:06 | INFO     | app.api.routes.market_intelligence | Starting market intelligence for: saas in africa
+2026-03-16 23:02:06 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Starting: market research for: General saas market analysis
+2026-03-16 23:02:06 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 23:02:06 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Starting: competitor analysis for: General saas market analysis
+2026-03-16 23:02:06 | WARNING  | app.tools.web_search | TAVILY_API_KEY not set — returning empty search results
+2026-03-16 23:02:14 | INFO     | agent.MarketResearchAgent | [MarketResearchAgent] Completed: market research
+2026-03-16 23:02:14 | INFO     | agent.CompetitorAgent | [CompetitorAgent] Completed: competitor analysis
+2026-03-16 23:02:47 | INFO     | app.api.routes.market_intelligence | Market intelligence synthesis complete.
+INFO:     127.0.0.1:38460 - "POST /api/v1/market/analyze HTTP/1.1" 200 OK
+2026-03-16 23:04:11 | INFO     | app.api.routes.financial_reports | Processing PDF: monthly-financial-report-form.pdf (1181.9 KB)
+2026-03-16 23:04:11 | INFO     | agent.FinancialAnalysisAgent | [FinancialAnalysisAgent] Starting: financial analysis of monthly-financial-report-form.pdf
+2026-03-16 23:04:11 | ERROR    | app.api.routes.financial_reports | PDF analysis failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98096, Requested 4438. Please try again in 36m29.376s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Traceback (most recent call last):
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/api/routes/financial_reports.py", line 46, in analyze_financial_report
+    result = await extract_financial_metrics(content, filename=file.filename or "report.pdf")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/services/extraction_service.py", line 20, in extract_financial_metrics
+    result: FinancialReportResponse = await _financial_agent.run(text=text, filename=filename)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/src/backend/app/agents/financial_analysis_agent.py", line 53, in run
+    result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 3197, in ainvoke
+    input_ = await coro_with_context(part(), context, create_task=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 5708, in ainvoke
+    return await self.bound.ainvoke(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 425, in ainvoke
+    llm_result = await self.agenerate_prompt(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1134, in agenerate_prompt
+    return await self.agenerate(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1092, in agenerate
+    raise exceptions[0]
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 1361, in _agenerate_with_cache
+    result = await self._agenerate(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/langchain_groq/chat_models.py", line 642, in _agenerate
+    response = await self.async_client.create(messages=message_dicts, **params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/resources/chat/completions.py", line 941, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1762, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lemessa-ahmed/Startup-to-Business/.venv/lib/python3.12/site-packages/groq/_base_client.py", line 1576, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98096, Requested 4438. Please try again in 36m29.376s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+INFO:     127.0.0.1:43250 - "POST /api/v1/financial/analyze HTTP/1.1" 500 Internal Server Error

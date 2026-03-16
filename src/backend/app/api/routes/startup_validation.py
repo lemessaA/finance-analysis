@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.startup import StartupValidationRequest, StartupValidationResponse
 from app.workflows.startup_validator_graph import run_startup_validation
+from app.services.scoring_service import score_startup
 from app.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -28,6 +29,18 @@ async def validate_startup(payload: StartupValidationRequest):
             industry=payload.industry,
             target_market=payload.target_market,
             additional_context=payload.additional_context,
+        )
+        # Enrich the result with composite scoring
+        scoring = await score_startup(
+            overall_score=result.overall_score,
+            market_score=result.market_score,
+            competition_score=result.competition_score,
+            risk_score=result.risk_score,
+            verdict=result.verdict,
+        )
+        logger.info(
+            f"Startup scored: {scoring['grade']} "
+            f"(composite={scoring['composite_score']}, verdict={result.verdict})"
         )
         return result
     except Exception as exc:

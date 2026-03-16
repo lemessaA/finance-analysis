@@ -46,8 +46,7 @@ class DecisionAgent(BaseAgent):
 
     def __init__(self):
         super().__init__(name="DecisionAgent", temperature=0.0)
-        self.parser = JsonOutputParser(pydantic_object=ValidationScore)
-        self.chain = DECISION_PROMPT | self.llm | self.parser
+        self.chain = DECISION_PROMPT | self.llm.with_structured_output(ValidationScore)
 
     async def run(
         self,
@@ -69,4 +68,4 @@ class DecisionAgent(BaseAgent):
             }
         )
         self._log_done("final decision synthesis")
-        return result
+        return result.model_dump()

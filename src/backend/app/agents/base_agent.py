@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 
 from app.config import settings
 from app.utils.logger import setup_logger
@@ -15,10 +15,10 @@ class BaseAgent(ABC):
     def __init__(self, name: str, temperature: float = 0.0):
         self.name = name
         self.logger = setup_logger(f"agent.{name}")
-        self.llm = ChatOpenAI(
-            model=settings.OPENAI_MODEL,
+        self.llm = ChatGroq(
+            model=settings.GROQ_MODEL,
             temperature=temperature,
-            api_key=settings.OPENAI_API_KEY,
+            api_key=settings.GROQ_API_KEY,
         )
 
     @abstractmethod

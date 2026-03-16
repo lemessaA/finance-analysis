@@ -26,23 +26,24 @@ async def test_root_endpoint():
 @pytest.mark.asyncio
 async def test_startup_validation_endpoint():
     from app.main import app
-    mock_response = {
-        "idea": "Test idea",
-        "industry": "Tech",
-        "target_market": "US",
-        "market_research": "Good market",
-        "competitor_analysis": "Few competitors",
-        "overall_score": 75.0,
-        "market_score": 80.0,
-        "competition_score": 70.0,
-        "risk_score": 65.0,
-        "verdict": "GO",
-        "key_strengths": [],
-        "key_risks": [],
-        "recommendations": [],
-        "executive_summary": "Viable.",
-        "error": None,
-    }
+    from app.schemas.startup import StartupValidationResponse
+    mock_response = StartupValidationResponse(
+        idea="Test idea",
+        industry="Tech",
+        target_market="US",
+        market_research="Good market",
+        competitor_analysis="Few competitors",
+        overall_score=75.0,
+        market_score=80.0,
+        competition_score=70.0,
+        risk_score=65.0,
+        verdict="GO",
+        key_strengths=[],
+        key_risks=[],
+        recommendations=[],
+        executive_summary="Viable.",
+        error=None,
+    )
     with patch(
         "app.api.routes.startup_validation.run_startup_validation",
         new_callable=AsyncMock,

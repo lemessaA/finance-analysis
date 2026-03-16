@@ -5,7 +5,8 @@ python-multipart
 
 # LangChain / LangGraph
 langchain
-langchain-openai
+langchain-groq
+langchain-huggingface
 langchain-community
 langgraph
 

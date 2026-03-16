@@ -12,7 +12,10 @@ import {
   AlertOctagon,
   Percent,
   BarChart,
-  CheckCircle2
+  CheckCircle2,
+  BookOpen,
+  AlertTriangle,
+  Lightbulb
 } from "lucide-react";
 
 export default function FinancialReportsPage() {
@@ -47,6 +50,27 @@ export default function FinancialReportsPage() {
     }
   };
 
+  const formatCurrency = (val: any) => {
+    if (!val || val === "Not disclosed") return "Not disclosed";
+    const num = Number(val);
+    if (isNaN(num)) return val;
+    return `$${num.toLocaleString()}`;
+  };
+
+  const formatPercent = (val: any) => {
+    if (!val || val === "Not disclosed") return "Not disclosed";
+    const num = Number(val);
+    if (isNaN(num)) return val;
+    return `${(num * 100).toFixed(1)}%`;
+  };
+
+  const formatNumber = (val: any) => {
+    if (!val || val === "Not disclosed") return "Not disclosed";
+    const num = Number(val);
+    if (isNaN(num)) return val;
+    return num.toLocaleString();
+  };
+
   return (
     <div className="max-w-6xl mx-auto animate-fade-in">
       <div className="mb-8">
@@ -77,7 +101,7 @@ export default function FinancialReportsPage() {
                       <p className="mb-2 text-sm text-slate-400">
                         {file ? <span className="font-semibold text-emerald-400">{file.name}</span> : <span><span className="font-semibold">Click to upload</span> or drag and drop</span>}
                       </p>
-                      <p className="text-xs text-slate-500">PDF, MAX 10MB</p>
+                      <p className="text-xs text-slate-500">PDF, MAX 20MB</p>
                   </div>
                   <input id="dropzone-file" type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
               </label>
@@ -122,7 +146,7 @@ export default function FinancialReportsPage() {
              <CheckCircle2 className="w-6 h-6 text-emerald-500 flex-shrink-0" />
              <div>
                 <h3 className="text-white font-semibold text-lg">Analysis Complete</h3>
-                <p className="text-slate-400 text-sm">Report ID: <span className="font-mono text-emerald-400/80">{result.report_id}</span></p>
+                <p className="text-slate-400 text-sm">Report ID: <span className="font-mono text-emerald-400/80">{result.filename}</span></p>
              </div>
           </div>
 
@@ -136,25 +160,25 @@ export default function FinancialReportsPage() {
             <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
               <p className="text-slate-400 font-medium mb-2">Revenue</p>
-              <p className="text-2xl font-bold text-white">${Number(result.metrics.revenue || 0).toLocaleString()}</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.revenue)}</p>
             </div>
 
             <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
               <p className="text-slate-400 font-medium mb-2">Net Profit</p>
-              <p className="text-2xl font-bold text-white">${Number(result.metrics.net_profit || 0).toLocaleString()}</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.net_profit)}</p>
             </div>
 
             <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
               <p className="text-slate-400 font-medium mb-2">Total Assets</p>
-              <p className="text-2xl font-bold text-white">${Number(result.metrics.total_assets || 0).toLocaleString()}</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.total_assets)}</p>
             </div>
 
             <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
               <p className="text-slate-400 font-medium mb-2">Total Liabilities</p>
-              <p className="text-2xl font-bold text-white">${Number(result.metrics.total_liabilities || 0).toLocaleString()}</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.total_liabilities)}</p>
             </div>
 
           </div>
@@ -167,43 +191,94 @@ export default function FinancialReportsPage() {
               <div className="space-y-4">
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
                     <span className="text-slate-300">Gross Margin</span>
-                    <span className="text-white font-bold">{(Number(result.metrics.gross_margin || 0) * 100).toFixed(1)}%</span>
+                    <span className="text-white font-bold">{formatPercent(result.metrics.gross_margin)}</span>
                  </div>
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Operating Margin</span>
-                    <span className="text-white font-bold">{(Number(result.metrics.operating_margin || 0) * 100).toFixed(1)}%</span>
+                    <span className="text-slate-300">EBITDA Margin</span>
+                    <span className="text-white font-bold">{formatPercent(result.metrics.ebitda_margin)}</span>
                  </div>
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
                     <span className="text-slate-300">Net Profit Margin</span>
-                    <span className="text-white font-bold">{(Number(result.metrics.net_profit_margin || 0) * 100).toFixed(1)}%</span>
+                    <span className="text-white font-bold">{formatPercent(result.metrics.net_margin)}</span>
                  </div>
               </div>
             </div>
 
             <div className="glass rounded-3xl p-8 border border-white/5 shadow-xl">
                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-400" /> Year-over-Year Growth
+                <TrendingUp className="w-5 h-5 text-blue-400" /> Key Indicators
               </h3>
                <div className="space-y-4">
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-blue-500/10">
                     <span className="text-slate-300">Revenue Growth (YoY)</span>
-                    <span className={`font-bold ${Number(result.metrics.revenue_growth_yoy || 0) > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {(Number(result.metrics.revenue_growth_yoy || 0) * 100).toFixed(1)}%
+                    <span className={`font-bold ${Number(result.metrics.revenue_growth_yoy || 0) > 0 ? 'text-emerald-400' : 'text-slate-300'}`}>
+                      {formatPercent(result.metrics.revenue_growth_yoy)}
                     </span>
                  </div>
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-blue-500/10">
-                    <span className="text-slate-300">Profit Growth (YoY)</span>
-                    <span className={`font-bold ${Number(result.metrics.profit_growth_yoy || 0) > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {(Number(result.metrics.profit_growth_yoy || 0) * 100).toFixed(1)}%
+                    <span className="text-slate-300">Current Ratio</span>
+                    <span className="font-bold text-white">
+                      {formatNumber(result.metrics.current_ratio)}
                     </span>
                  </div>
                  <div className="p-4 bg-white/5 rounded-xl mt-4 border border-purple-500/20">
                     <span className="text-slate-300 block mb-1 text-sm">Debt to Equity Ratio</span>
-                    <span className="text-white font-bold text-xl">{Number(result.metrics.debt_to_equity || 0).toFixed(2)}</span>
+                    <span className="text-white font-bold text-xl">{formatNumber(result.metrics.debt_to_equity)}</span>
                  </div>
               </div>
             </div>
           </div>
+
+          {/* Narrative Analysis Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            <div className="lg:col-span-2 glass rounded-3xl p-8 border border-white/5 shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-emerald-400" /> Executive Analysis
+              </h3>
+              <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
+                {result.analysis}
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              <div className="glass rounded-3xl p-8 border border-white/5 shadow-xl">
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <Lightbulb className="w-5 h-5 text-yellow-400" /> Key Highlights
+                </h3>
+                {result.key_highlights?.length > 0 ? (
+                  <ul className="space-y-3">
+                    {result.key_highlights.map((highlight, i) => (
+                      <li key={i} className="flex gap-3 text-slate-300">
+                        <span className="text-yellow-400 mt-1">•</span>
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-slate-500 italic">No highlights extracted.</p>
+                )}
+              </div>
+
+              <div className="glass rounded-3xl p-8 border border-white/5 shadow-xl">
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400" /> Key Risks
+                </h3>
+                {result.key_risks?.length > 0 ? (
+                  <ul className="space-y-3">
+                    {result.key_risks.map((risk, i) => (
+                      <li key={i} className="flex gap-3 text-slate-300">
+                        <span className="text-red-400 mt-1">•</span>
+                        <span>{risk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-slate-500 italic">No key risks identified.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
         </div>
       )}
     </div>

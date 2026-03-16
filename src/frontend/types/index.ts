@@ -29,14 +29,16 @@ export interface StartupValidationResponse {
 // ─── Financial Analyzer ───────────────────────────────────────────────────────
 export interface FinancialMetrics {
   revenue?: string;
+  net_profit?: string;
+  operating_income?: string;
+  total_assets?: string;
+  total_liabilities?: string;
+  cash_flow?: string;
   revenue_growth_yoy?: string;
   gross_margin?: string;
   ebitda?: string;
   ebitda_margin?: string;
-  net_income?: string;
   net_margin?: string;
-  operating_cash_flow?: string;
-  free_cash_flow?: string;
   eps?: string;
   current_ratio?: string;
   debt_to_equity?: string;

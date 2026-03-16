@@ -39,7 +39,7 @@ class FinancialAnalysisAgent(BaseAgent):
         # Use an LLM instance capable of structured output
         llm = ChatGroq(
             temperature=0.0,
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             api_key=settings.GROQ_API_KEY,
         )
         self.chain = FINANCIAL_ANALYSIS_PROMPT | llm.with_structured_output(FinancialReportResponse)

@@ -446,3 +446,11 @@ Traceback (most recent call last):
     raise self._make_status_error_from_response(err.response) from None
 groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k6fca5f9fvm9935fq3kdx191` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98096, Requested 4438. Please try again in 36m29.376s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
 INFO:     127.0.0.1:43250 - "POST /api/v1/financial/analyze HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59386 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59386 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-16 23:20:19 | INFO     | app.main | 👋 Shutting down AI Business Intelligence Platform...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [40171]
+INFO:     Stopping reloader process [15634]

@@ -1,0 +1,45 @@
+# Core Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# LangChain / LangGraph
+langchain
+langchain-openai
+langchain-community
+langgraph
+
+# Embeddings / Vector Store
+faiss-cpu
+
+# Data & ML
+pandas
+numpy
+scikit-learn
+
+# PDF Parsing
+pymupdf
+
+# Database
+sqlalchemy
+aiosqlite
+asyncpg
+alembic
+
+# Config & Validation
+pydantic
+pydantic-settings
+python-dotenv
+
+# HTTP Client
+httpx
+
+# Search Tool
+tavily-python
+
+# Testing
+pytest
+pytest-asyncio
+
+# Dev
+ruff

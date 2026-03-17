@@ -155,7 +155,7 @@ export default function FinancialReportsPage() {
             Core Financial Metrics
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             
             <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
@@ -181,6 +181,12 @@ export default function FinancialReportsPage() {
               <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.total_liabilities)}</p>
             </div>
 
+            <div className="glass rounded-3xl p-6 border border-white/5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all"></div>
+              <p className="text-slate-400 font-medium mb-2">Cash Flow</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(result.metrics.cash_flow)}</p>
+            </div>
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
@@ -200,6 +206,10 @@ export default function FinancialReportsPage() {
                  <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
                     <span className="text-slate-300">Net Profit Margin</span>
                     <span className="text-white font-bold">{formatPercent(result.metrics.net_margin)}</span>
+                 </div>
+                 <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+                    <span className="text-slate-300">Operating Income</span>
+                    <span className="text-white font-bold">{formatCurrency(result.metrics.operating_income)}</span>
                  </div>
               </div>
             </div>

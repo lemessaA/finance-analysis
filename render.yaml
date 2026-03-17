@@ -1,0 +1,42 @@
+services:
+  # Backend API Service
+  - type: web
+    name: ai-business-backend
+    runtime: python3
+    buildCommand: "cd src/backend && pip install -r requirements.txt"
+    startCommand: "cd src/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHONPATH
+        value: /opt/render/project/src/backend
+      - key: PORT
+        generateValue: true
+
+  # Frontend Service
+  - type: web
+    name: ai-business-frontend
+    runtime: node
+    buildCommand: "cd src/frontend && npm install && npm run build"
+    startCommand: "cd src/frontend && npm start"
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: ai-business-backend
+          property: host
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: true
+
+# Database (if needed in future)
+# databases:
+#   - name: ai-business-db
+#     databaseName: ai_business
+#     user: ai_business_user
+#     plan: free

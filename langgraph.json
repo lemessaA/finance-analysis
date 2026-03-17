@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "./src/backend"
+    ],
+    "graphs": {
+        "agent": "./src/backend/app/workflows/startup_validator_graph.py:_compiled_graph"
+    },
+    "env": ".env"
+}

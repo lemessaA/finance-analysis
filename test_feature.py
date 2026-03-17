@@ -73,7 +73,7 @@ except Exception as e:
     sys.exit(1)
 
 # 2. Analyze PDF 1
-url = "http://localhost:8000/analyze"
+url = "http://localhost:8000/api/v1/financial/analyze"
 try:
     print("Analyzing Apple PDF...")
     with open("/tmp/r1.pdf", "rb") as f:
@@ -104,7 +104,7 @@ except Exception as e:
     sys.exit(1)
 
 # 4. Compare
-compare_url = "http://localhost:8000/compare"
+compare_url = "http://localhost:8000/api/v1/financial/compare"
 try:
     print(f"Comparing {id1} to {id2}...")
     payload = {"baseline_report_id": id1, "current_report_id": id2}

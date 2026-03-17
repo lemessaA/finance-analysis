@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-
 from app.agents.base_agent import BaseAgent
 from app.tools.web_search import tavily_search
 
@@ -19,6 +18,10 @@ MARKET_RESEARCH_PROMPT = ChatPromptTemplate.from_messages(
             "4. Key market trends and tailwinds\n"
             "5. Customer segments and personas\n"
             "6. Market maturity and growth rate\n\n"
+            "7. Ethiopian market size trends 2024 2025\n"
+            "8. focus only ethiopian market\n"
+            "9. if you dont find any data about ethiopian market, say so\n"
+            "10. Money should be in ETB, if you find in USD, convert it to ETB\n"
             "Be specific with numbers and cite reasoning. Use the search results provided.",
         ),
         (

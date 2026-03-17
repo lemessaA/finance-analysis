@@ -190,14 +190,29 @@ export default function ForecastingPage() {
         </div>
 
         {/* Right Column: Results Dashboard */}
-        <div className="lg:col-span-2">
-           {state === "idle" && (
-             <div className="h-full flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-white/10 rounded-3xl bg-white/5">
-                <LineChart className="w-16 h-16 text-slate-600 mb-4" />
-                <h3 className="text-xl font-bold text-slate-400 mb-2">Awaiting Data</h3>
-                <p className="text-slate-500 max-w-sm">Enter your historical metrics on the left and our agent will run statistical regression to predict future performance.</p>
-             </div>
-           )}
+        <div className="lg:col-span-2 relative">
+          <div className="sticky top-6 flex justify-end mb-6">
+            <div className="w-full max-w-md">
+              <div className="glass rounded-2xl p-6 border border-white/10 bg-white/5">
+                <h2 className="text-xl font-semibold text-white mb-3">Quick Start</h2>
+                <ol className="list-decimal list-inside text-slate-300 space-y-2 text-sm">
+                  <li>Enter a metric name (e.g., Revenue, MRR, Users).</li>
+                  <li>Provide at least 3 historical data points (YYYY-MM and value).</li>
+                  <li>Set how many future periods you want to forecast.</li>
+                  <li>Click <span className="font-semibold text-white">Generate Forecast</span> to run the model.</li>
+                </ol>
+                <p className="text-xs text-slate-500 mt-3">Tip: Use consistent intervals (monthly/quarterly) for best results.</p>
+              </div>
+            </div>
+          </div>
+
+          {state === "idle" && (
+            <div className="h-full flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-white/10 rounded-3xl bg-white/5">
+              <LineChart className="w-16 h-16 text-slate-600 mb-4" />
+              <h3 className="text-xl font-bold text-slate-400 mb-2">Awaiting Data</h3>
+              <p className="text-slate-500 max-w-sm">Enter your historical metrics on the left and our agent will run statistical regression to predict future performance.</p>
+            </div>
+          )}
 
            {state === "error" && (
             <div className="glass rounded-2xl p-6 border border-red-500/30 bg-red-500/10 animate-slide-up">

@@ -71,3 +71,103 @@ export async function getMarketIntelligence(
   );
   return data;
 }
+
+// ─── Dashboard API ─────────────────────────────────────────────────────────────
+export interface DashboardData {
+  score: number;
+  marketAnalysis: {
+    marketSize: string;
+    growthRate: string;
+    competitionLevel: string;
+    opportunityScore: number;
+  };
+  competitors: Array<{
+    name: string;
+    marketShare: string;
+    revenue: string;
+    strengths: string[];
+    weaknesses: string[];
+  }>;
+  revenueForecast: Array<{
+    month: string;
+    actual: number;
+    forecast: number;
+  }>;
+  financialComparison: Array<{
+    category: string;
+    yourCompany: number;
+    industryAvg: number;
+    topPerformer: number;
+  }>;
+  marketSegments: Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>;
+}
+
+export async function getDashboardData(): Promise<DashboardData> {
+  const { data } = await api.get<DashboardData>("/api/v1/dashboard/dashboard");
+  return data;
+}
+
+export async function getStartupScore(): Promise<{
+  score: number;
+  breakdown: Record<string, number>;
+  recommendation: string;
+}> {
+  const { data } = await api.get("/api/v1/dashboard/dashboard/score");
+  return data;
+}
+
+export async function getMarketAnalysis(): Promise<{
+  marketSize: string;
+  growthRate: string;
+  competitionLevel: string;
+  opportunityScore: number;
+  details?: Record<string, any>;
+}> {
+  const { data } = await api.get("/api/v1/dashboard/dashboard/market-analysis");
+  return data;
+}
+
+export async function getCompetitors(): Promise<Array<{
+  name: string;
+  marketShare: string;
+  revenue: string;
+  strengths: string[];
+  weaknesses: string[];
+  description?: string;
+}>> {
+  const { data } = await api.get("/api/v1/dashboard/dashboard/competitors");
+  return data;
+}
+
+export async function getRevenueForecast(): Promise<{
+  forecast: Array<{
+    month: string;
+    actual: number;
+    forecast: number;
+  }>;
+  model_used: string;
+  confidence: number;
+  next_month_forecast: number;
+}> {
+  const { data } = await api.get("/api/v1/dashboard/dashboard/revenue-forecast");
+  return data;
+}
+
+export async function getFinancialComparison(): Promise<{
+  metrics: Array<{
+    category: string;
+    yourCompany: number;
+    industryAvg: number;
+    topPerformer: number;
+    percentile?: number;
+  }>;
+  overall_ranking: string;
+  key_insights: string[];
+}> {
+  const { data } = await api.get("/api/v1/dashboard/dashboard/financial-comparison");
+  return data;
+}

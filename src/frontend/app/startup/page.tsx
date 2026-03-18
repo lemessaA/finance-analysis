@@ -46,6 +46,19 @@ export default function StartupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.idea.trim() || !form.industry.trim()) return;
+    
+    // Validate minimum length requirements
+    if (form.idea.trim().length < 10) {
+      setError("Startup idea must be at least 10 characters long.");
+      setState("error");
+      return;
+    }
+    
+    if (form.industry.trim().length < 2) {
+      setError("Industry must be at least 2 characters long.");
+      setState("error");
+      return;
+    }
 
     setState("loading");
     setError(null);
@@ -90,9 +103,10 @@ export default function StartupPage() {
               rows={3}
               value={form.idea}
               onChange={(e) => setForm({ ...form, idea: e.target.value })}
-              placeholder="Describe your startup idea in detail..."
+              placeholder="Describe your startup idea in detail (minimum 10 characters)..."
               className="w-full bg-surface border border-surface-border rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 resize-none transition"
               required
+              minLength={10}
             />
           </div>
 
@@ -103,9 +117,10 @@ export default function StartupPage() {
                 type="text"
                 value={form.industry}
                 onChange={(e) => setForm({ ...form, industry: e.target.value })}
-                placeholder="e.g. HealthTech, FinTech, EdTech"
+                placeholder="e.g. HealthTech, FinTech, EdTech (min 2 characters)"
                 className="w-full bg-surface border border-surface-border rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition"
                 required
+                minLength={2}
               />
             </div>
             <div>

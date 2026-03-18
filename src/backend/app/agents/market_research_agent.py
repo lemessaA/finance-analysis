@@ -22,6 +22,8 @@ MARKET_RESEARCH_PROMPT = ChatPromptTemplate.from_messages(
             "8. focus only ethiopian market\n"
             "9. if you dont find any data about ethiopian market, say so\n"
             "10. Money should be in ETB, if you find in USD, convert it to ETB\n"
+            "11. The ouput should be in a structured format with clear sections and bullet points,\n"
+            "12. Not try to create tables, just use bullet points\n"
             "Be specific with numbers and cite reasoning. Use the search results provided.",
         ),
         (

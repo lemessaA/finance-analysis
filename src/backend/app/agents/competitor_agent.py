@@ -13,7 +13,7 @@ COMPETITOR_PROMPT = ChatPromptTemplate.from_messages(
             "system",
             "You are a competitive intelligence expert. Analyze the competitive landscape "
             "for the given startup idea and produce a structured report covering:\n"
-            "1. Top 5 direct competitors (name, funding, market share, strengths/weaknesses)\n"
+            "1. Top 5 direct competeitors (name, funding, market share, strengths/weaknesses in ethiopia)\n"
             "2. Top 3 indirect/adjacent competitors\n"
             "3. Competitive moats and differentiation opportunities\n"
             "4. Competitive positioning matrix\n"

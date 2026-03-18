@@ -6,7 +6,7 @@ import Sidebar from "@/components/layout/Sidebar";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "AI Business Intelligence Platform",
+  title: "Your Business Intelligence Platform",
   description:
     "Startup validation, financial analysis, and forecasting powered by multi-agent AI",
   keywords: ["AI", "Business Intelligence", "Startup Validator", "Financial Analysis"],

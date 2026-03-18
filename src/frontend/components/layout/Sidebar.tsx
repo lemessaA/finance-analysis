@@ -13,11 +13,11 @@ import {
 import clsx from "clsx";
 
 const navItems = [
-  { href: "/",            label: "Dashboard",  icon: LayoutDashboard },
+  { href: "/dashboard",   label: "Dashboard",        icon: LayoutDashboard },
   { href: "/startup",     label: "Startup Validator", icon: Lightbulb  },
   { href: "/market",      label: "Market Intel",      icon: LineChart  },
   { href: "/reports",     label: "Financial Reports", icon: FileText   },
-  { href: "/dashboard",   label: "Forecasting",       icon: TrendingUp },
+  { href: "/forecasting", label: "ML Forecasting",    icon: Brain       },
 ];
 
 export default function Sidebar() {
@@ -31,8 +31,8 @@ export default function Sidebar() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-glow-brand">
             <Brain className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <p className="text-sm font-bold text-white leading-tight">AI Biz Intel</p>
+          <div> 
+            <p className="text-sm font-bold text-white leading-tight">Your Business Intelligence</p>
             <p className="text-xs text-slate-400">Platform v1.0</p>
           </div>
         </div>

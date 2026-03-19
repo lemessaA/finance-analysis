@@ -12,7 +12,10 @@ langgraph
 
 # Embeddings / Vector Store
 faiss-cpu
-
+# database
+psycopg2-binary
+aiosqlite
+sqlalchemy[asyncpg]
 # Data & ML
 pandas
 numpy

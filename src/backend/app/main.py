@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
 from app.config import settings
 from app.utils.logger import setup_logger
+from app.utils.error_handlers import setup_global_exception_handlers
 
 logger = setup_logger(__name__)
 
@@ -31,6 +32,9 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
 )
+
+# Setup global exception handlers
+setup_global_exception_handlers(app)
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
 app.add_middleware(

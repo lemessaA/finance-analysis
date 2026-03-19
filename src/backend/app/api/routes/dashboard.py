@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, Any, List
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database.session import get_db
 from app.database.models import (
@@ -14,11 +14,12 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-async def ensure_database_populated(db: Session):
+async def ensure_database_populated(db: AsyncSession):
     """Ensure database has data, populate with sample data if empty."""
     
     # Check if we have any data
-    competitors_count = db.execute(select(Competitor).limit(1)).scalar_one_or_none()
+    result = await db.execute(select(Competitor).limit(1))
+    competitors_count = result.scalar_one_or_none()
     
     if not competitors_count:
         logger.info("Database is empty, populating with sample data...")
@@ -176,7 +177,7 @@ async def ensure_database_populated(db: Session):
         logger.info("Database populated with sample data")
 
 @router.get("/dashboard", response_model=Dict[str, Any])
-async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def get_dashboard_data(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """
     Get comprehensive dashboard data including:
     - Startup validation score
@@ -190,11 +191,12 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
         await ensure_database_populated(db)
         
         # Get latest startup validation score
-        latest_validation = db.execute(
+        result = await db.execute(
             select(StartupValidation)
             .order_by(StartupValidation.created_at.desc())
             .limit(1)
-        ).scalar_one_or_none()
+        )
+        latest_validation = result.scalar_one_or_none()
         
         if latest_validation:
             score_result = await score_startup(
@@ -217,12 +219,13 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
             score = score_result["composite_score"]
 
         # Get market analysis data
-        market_analysis_db = db.execute(
+        result = await db.execute(
             select(MarketAnalysis)
             .where(MarketAnalysis.is_current == True)
             .order_by(MarketAnalysis.updated_at.desc())
             .limit(1)
-        ).scalar_one_or_none()
+        )
+        market_analysis_db = result.scalar_one_or_none()
 
         market_analysis = {
             "marketSize": market_analysis_db.market_size if market_analysis_db else "$2.4B",
@@ -232,11 +235,12 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
         }
 
         # Get competitors data
-        competitors_db = db.execute(
+        result = await db.execute(
             select(Competitor)
             .where(Competitor.is_active == True)
             .order_by(Competitor.market_share.desc())
-        ).scalars().all()
+        )
+        competitors_db = result.scalars().all()
 
         competitors = []
         for comp in competitors_db:
@@ -249,10 +253,11 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
             })
 
         # Get revenue forecast data
-        revenue_forecasts_db = db.execute(
+        result = await db.execute(
             select(RevenueForecast)
             .order_by(RevenueForecast.month)
-        ).scalars().all()
+        )
+        revenue_forecasts_db = result.scalars().all()
 
         revenue_forecast = []
         for rf in revenue_forecasts_db:
@@ -263,11 +268,12 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
             })
 
         # Get financial comparison data
-        financial_metrics_db = db.execute(
+        result = await db.execute(
             select(FinancialMetric)
             .where(FinancialMetric.is_current == True)
             .order_by(FinancialMetric.category)
-        ).scalars().all()
+        )
+        financial_metrics_db = result.scalars().all()
 
         financial_comparison = []
         for fm in financial_metrics_db:
@@ -279,11 +285,12 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
             })
 
         # Get market segments data
-        market_segments_db = db.execute(
+        result = await db.execute(
             select(MarketSegment)
             .where(MarketSegment.is_current == True)
             .order_by(MarketSegment.value.desc())
-        ).scalars().all()
+        )
+        market_segments_db = result.scalars().all()
 
         market_segments = []
         for ms in market_segments_db:
@@ -307,16 +314,17 @@ async def get_dashboard_data(db: Session = Depends(get_db)) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Failed to fetch dashboard data: {str(e)}")
 
 @router.get("/dashboard/score", response_model=Dict[str, Any])
-async def get_startup_score(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def get_startup_score(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get just the startup validation score"""
     try:
         await ensure_database_populated(db)
         
-        latest_validation = db.execute(
+        result = await db.execute(
             select(StartupValidation)
             .order_by(StartupValidation.created_at.desc())
             .limit(1)
-        ).scalar_one_or_none()
+        )
+        latest_validation = result.scalar_one_or_none()
         
         if latest_validation:
             score_result = await score_startup(
@@ -345,17 +353,18 @@ async def get_startup_score(db: Session = Depends(get_db)) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Failed to fetch startup score: {str(e)}")
 
 @router.get("/dashboard/market-analysis", response_model=Dict[str, Any])
-async def get_market_analysis(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def get_market_analysis(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get market analysis summary"""
     try:
         await ensure_database_populated(db)
         
-        market_analysis_db = db.execute(
+        result = await db.execute(
             select(MarketAnalysis)
             .where(MarketAnalysis.is_current == True)
             .order_by(MarketAnalysis.updated_at.desc())
             .limit(1)
-        ).scalar_one_or_none()
+        )
+        market_analysis_db = result.scalar_one_or_none()
 
         if market_analysis_db:
             return {
@@ -387,16 +396,17 @@ async def get_market_analysis(db: Session = Depends(get_db)) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Failed to fetch market analysis: {str(e)}")
 
 @router.get("/dashboard/competitors", response_model=List[Dict[str, Any]])
-async def get_competitors(db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
+async def get_competitors(db: AsyncSession = Depends(get_db)) -> List[Dict[str, Any]]:
     """Get competitor analysis"""
     try:
         await ensure_database_populated(db)
         
-        competitors_db = db.execute(
+        result = await db.execute(
             select(Competitor)
             .where(Competitor.is_active == True)
             .order_by(Competitor.market_share.desc())
-        ).scalars().all()
+        )
+        competitors_db = result.scalars().all()
 
         competitors = []
         for comp in competitors_db:
@@ -414,15 +424,16 @@ async def get_competitors(db: Session = Depends(get_db)) -> List[Dict[str, Any]]
         raise HTTPException(status_code=500, detail=f"Failed to fetch competitors: {str(e)}")
 
 @router.get("/dashboard/revenue-forecast", response_model=Dict[str, Any])
-async def get_revenue_forecast(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def get_revenue_forecast(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get revenue forecast data"""
     try:
         await ensure_database_populated(db)
         
-        revenue_forecasts_db = db.execute(
+        result = await db.execute(
             select(RevenueForecast)
             .order_by(RevenueForecast.month)
-        ).scalars().all()
+        )
+        revenue_forecasts_db = result.scalars().all()
 
         forecast = []
         model_used = None
@@ -450,16 +461,17 @@ async def get_revenue_forecast(db: Session = Depends(get_db)) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Failed to fetch revenue forecast: {str(e)}")
 
 @router.get("/dashboard/financial-comparison", response_model=Dict[str, Any])
-async def get_financial_comparison(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def get_financial_comparison(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
     """Get financial comparison data"""
     try:
         await ensure_database_populated(db)
         
-        financial_metrics_db = db.execute(
+        result = await db.execute(
             select(FinancialMetric)
             .where(FinancialMetric.is_current == True)
             .order_by(FinancialMetric.category)
-        ).scalars().all()
+        )
+        financial_metrics_db = result.scalars().all()
 
         metrics = []
         for fm in financial_metrics_db:

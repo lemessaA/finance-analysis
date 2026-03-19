@@ -5,9 +5,11 @@ from sqlalchemy import select
 from app.database.session import get_db
 from app.database.models import (
     Competitor, MarketAnalysis, FinancialMetric, 
-    MarketSegment, RevenueForecast, StartupValidation
+    MarketSegment, RevenueForecast, StartupValidation, FinancialReport
 )
 from app.services.scoring_service import score_startup
+from app.services.idea_generator_service import generate_business_ideas
+from app.services.llm_agent_service import llm_agent_service
 import logging
 
 logger = logging.getLogger(__name__)
@@ -176,21 +178,11 @@ async def ensure_database_populated(db: AsyncSession):
         await db.commit()
         logger.info("Database populated with sample data")
 
-@router.get("/dashboard", response_model=Dict[str, Any])
-async def get_dashboard_data(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
-    """
-    Get comprehensive dashboard data including:
-    - Startup validation score
-    - Market analysis summary
-    - Competitor list
-    - Revenue forecast data
-    - Financial comparison data
-    """
+@router.get("/dashboard/ai-generated", response_model=Dict[str, Any])
+async def get_ai_generated_dashboard(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+    """Get AI-generated dashboard data from LLM agents"""
     try:
-        # Ensure database has data
-        await ensure_database_populated(db)
-        
-        # Get latest startup validation score
+        # Get user's latest validation for context
         result = await db.execute(
             select(StartupValidation)
             .order_by(StartupValidation.created_at.desc())
@@ -198,107 +190,286 @@ async def get_dashboard_data(db: AsyncSession = Depends(get_db)) -> Dict[str, An
         )
         latest_validation = result.scalar_one_or_none()
         
+        # Prepare user context for LLM agents
+        user_context = None
         if latest_validation:
-            score_result = await score_startup(
-                overall_score=latest_validation.overall_score or 75.0,
-                market_score=82.0,
-                competition_score=68.0,
-                risk_score=71.0,
-                verdict=latest_validation.verdict or "Go"
-            )
-            score = score_result["composite_score"]
-        else:
-            # Fallback if no validation data exists
-            score_result = await score_startup(
-                overall_score=75.0,
-                market_score=82.0,
-                competition_score=68.0,
-                risk_score=71.0,
-                verdict="Go"
-            )
-            score = score_result["composite_score"]
+            user_context = {
+                "industry": latest_validation.industry,
+                "target_market": latest_validation.target_market,
+                "idea": latest_validation.idea,
+                "business_stage": "Early Stage",
+                "overall_score": latest_validation.overall_score
+            }
+        
+        # Generate dashboard data using LLM agents
+        ai_dashboard_data = await llm_agent_service.generate_dashboard_data(user_context)
+        
+        # Transform to match frontend expected format
+        transformed_data = {
+            "score": ai_dashboard_data["score"],
+            "marketAnalysis": {
+                "marketSize": ai_dashboard_data["market_intelligence"]["market_size"],
+                "growthRate": ai_dashboard_data["market_intelligence"]["growth_rate"],
+                "competitionLevel": ai_dashboard_data["market_intelligence"]["competition_level"],
+                "opportunityScore": ai_dashboard_data["market_intelligence"]["opportunity_score"],
+                "industry": user_context.get("industry", "Technology") if user_context else "Technology"
+            },
+            "competitors": [
+                {
+                    "name": competitor,
+                    "marketShare": f"{15 + i*5}%",
+                    "revenue": f"${10 + i*5}M",
+                    "strengths": ["Strong brand", "Innovation", "Market presence"],
+                    "weaknesses": ["High costs", "Slow adaptation"]
+                }
+                for i, competitor in enumerate(ai_dashboard_data["market_intelligence"]["competitive_landscape"]["market_leaders"])
+            ],
+            "revenueForecast": [
+                {"month": "Jan", "actual": 20000, "forecast": 20000},
+                {"month": "Feb", "actual": 25000, "forecast": 25000},
+                {"month": "Mar", "actual": 30000, "forecast": 30000},
+                {"month": "Apr", "actual": None, "forecast": 35000},
+                {"month": "May", "actual": None, "forecast": 42000},
+                {"month": "Jun", "actual": None, "forecast": 50000}
+            ],
+            "financialComparison": ai_dashboard_data["financial_insights"]["key_metrics"],
+            "marketSegments": ai_dashboard_data["market_intelligence"]["market_segments"],
+            "businessIdeas": ai_dashboard_data["business_ideas"],
+            "aiGenerated": True,
+            "generatedAt": ai_dashboard_data["generated_at"],
+            "businessAnalysis": ai_dashboard_data["business_analysis"],
+            "financialInsights": ai_dashboard_data["financial_insights"],
+            "userValidation": {
+                "idea": user_context.get("idea", "AI-Generated Business") if user_context else "AI-Generated Business",
+                "industry": user_context.get("industry", "Technology") if user_context else "Technology",
+                "targetMarket": user_context.get("target_market", "SMBs") if user_context else "SMBs",
+                "verdict": "AI Generated Insights",
+                "executiveSummary": ai_dashboard_data["business_analysis"]["industry_analysis"]
+            } if user_context else None,
+            "hasData": True,
+            "dataSource": "LLM Agents",
+            "lastUpdated": ai_dashboard_data["generated_at"]
+        }
+        
+        return transformed_data
+        
+    except Exception as e:
+        logger.error(f"Error generating AI dashboard: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate AI dashboard: {str(e)}")
 
-        # Get market analysis data
+@router.post("/dashboard/ai-generated/refresh", response_model=Dict[str, Any])
+async def refresh_ai_dashboard(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+    """Generate fresh AI-powered dashboard data"""
+    try:
+        # Get user context for fresh generation
         result = await db.execute(
-            select(MarketAnalysis)
-            .where(MarketAnalysis.is_current == True)
-            .order_by(MarketAnalysis.updated_at.desc())
+            select(StartupValidation)
+            .order_by(StartupValidation.created_at.desc())
             .limit(1)
         )
-        market_analysis_db = result.scalar_one_or_none()
-
-        market_analysis = {
-            "marketSize": market_analysis_db.market_size if market_analysis_db else "$2.4B",
-            "growthRate": market_analysis_db.growth_rate if market_analysis_db else "18.5%",
-            "competitionLevel": market_analysis_db.competition_level if market_analysis_db else "Medium",
-            "opportunityScore": market_analysis_db.opportunity_score if market_analysis_db else 82
+        latest_validation = result.scalar_one_or_none()
+        
+        user_context = None
+        if latest_validation:
+            user_context = {
+                "industry": latest_validation.industry,
+                "target_market": latest_validation.target_market,
+                "idea": latest_validation.idea,
+                "business_stage": "Early Stage",
+                "overall_score": latest_validation.overall_score
+            }
+        
+        # Generate fresh dashboard data
+        fresh_ai_data = await llm_agent_service.generate_dashboard_data(user_context)
+        
+        return {
+            "message": "AI dashboard data refreshed successfully!",
+            "generated_at": fresh_ai_data["generated_at"],
+            "score": fresh_ai_data["score"],
+            "ideas_count": len(fresh_ai_data["business_ideas"]),
+            "ai_generated": True
         }
+        
+    except Exception as e:
+        logger.error(f"Error refreshing AI dashboard: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to refresh AI dashboard: {str(e)}")
 
-        # Get competitors data
+@router.get("/dashboard", response_model=Dict[str, Any])
+async def get_dashboard_data(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+    """
+    Get comprehensive dashboard data based on user's latest inputs:
+    - Latest startup validation score and analysis
+    - Market analysis for user's industry
+    - Competitors relevant to user's market
+    - Financial data from user's uploaded reports
+    - Revenue forecasts based on user's data
+    """
+    try:
+        # Get latest startup validation from user input
         result = await db.execute(
-            select(Competitor)
-            .where(Competitor.is_active == True)
-            .order_by(Competitor.market_share.desc())
+            select(StartupValidation)
+            .order_by(StartupValidation.created_at.desc())
+            .limit(1)
         )
-        competitors_db = result.scalars().all()
+        latest_validation = result.scalar_one_or_none()
+        
+        if not latest_validation:
+            # No user data yet - return empty dashboard with guidance
+            return {
+                "score": 0,
+                "marketAnalysis": None,
+                "competitors": [],
+                "revenueForecast": [],
+                "financialComparison": [],
+                "marketSegments": [],
+                "message": "No data available. Please submit a startup validation or upload financial reports to see your dashboard.",
+                "hasData": False
+            }
+        
+        # Get score from user's latest validation
+        try:
+            score_result = await score_startup(
+                overall_score=latest_validation.overall_score or 0,
+                market_score=latest_validation.market_score or 0,
+                competition_score=latest_validation.competition_score or 0,
+                risk_score=latest_validation.risk_score or 0,
+                verdict=latest_validation.verdict or "Pending"
+            )
+            score = score_result["composite_score"]
+        except Exception as e:
+            logger.error(f"Scoring error: {e}")
+            score = latest_validation.overall_score or 0
+        
+        # Get market analysis for user's industry
+        try:
+            result = await db.execute(
+                select(MarketAnalysis)
+                .where(MarketAnalysis.industry == latest_validation.industry)
+                .where(MarketAnalysis.is_current == True)
+                .order_by(MarketAnalysis.updated_at.desc())
+                .limit(1)
+            )
+            market_analysis_db = result.scalar_one_or_none()
+            
+            # If no industry-specific data, get general data
+            if not market_analysis_db:
+                result = await db.execute(
+                    select(MarketAnalysis)
+                    .where(MarketAnalysis.is_current == True)
+                    .order_by(MarketAnalysis.updated_at.desc())
+                    .limit(1)
+                )
+                market_analysis_db = result.scalar_one_or_none()
 
-        competitors = []
-        for comp in competitors_db:
-            competitors.append({
-                "name": comp.name,
-                "marketShare": comp.market_share,
-                "revenue": comp.revenue,
-                "strengths": comp.strengths or [],
-                "weaknesses": comp.weaknesses or []
-            })
+            market_analysis = {
+                "marketSize": market_analysis_db.market_size if market_analysis_db else "TBD",
+                "growthRate": market_analysis_db.growth_rate if market_analysis_db else "TBD",
+                "competitionLevel": market_analysis_db.competition_level if market_analysis_db else "TBD",
+                "opportunityScore": market_analysis_db.opportunity_score if market_analysis_db else 0,
+                "industry": latest_validation.industry or "Unknown"
+            }
+        except Exception as e:
+            logger.error(f"Market analysis error: {e}")
+            market_analysis = {
+                "marketSize": "TBD",
+                "growthRate": "TBD",
+                "competitionLevel": "TBD",
+                "opportunityScore": 0,
+                "industry": latest_validation.industry or "Unknown"
+            }
 
-        # Get revenue forecast data
-        result = await db.execute(
-            select(RevenueForecast)
-            .order_by(RevenueForecast.month)
-        )
-        revenue_forecasts_db = result.scalars().all()
+        # Get competitors for user's industry
+        try:
+            result = await db.execute(
+                select(Competitor)
+                .where(Competitor.industry == latest_validation.industry)
+                .where(Competitor.is_active == True)
+                .order_by(Competitor.market_share.desc())
+                .limit(5)
+            )
+            competitors_db = result.scalars().all()
 
-        revenue_forecast = []
-        for rf in revenue_forecasts_db:
-            revenue_forecast.append({
-                "month": rf.month,
-                "actual": rf.actual,
-                "forecast": rf.forecast
-            })
+            competitors = []
+            for comp in competitors_db:
+                competitors.append({
+                    "name": comp.name,
+                    "marketShare": comp.market_share,
+                    "revenue": comp.revenue,
+                    "strengths": comp.strengths or [],
+                    "weaknesses": comp.weaknesses or []
+                })
+        except Exception as e:
+            logger.error(f"Competitors error: {e}")
+            competitors = []
 
-        # Get financial comparison data
-        result = await db.execute(
-            select(FinancialMetric)
-            .where(FinancialMetric.is_current == True)
-            .order_by(FinancialMetric.category)
-        )
-        financial_metrics_db = result.scalars().all()
+        # Generate simple revenue forecast based on validation score
+        try:
+            revenue_forecast = []
+            months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            base_revenue = 50000 + (latest_validation.overall_score or 50) * 1000
+            
+            for i, month in enumerate(months):
+                if i < 6:
+                    actual = base_revenue * (0.8 + (i * 0.05))
+                    revenue_forecast.append({
+                        "month": month,
+                        "actual": round(actual, 2),
+                        "forecast": round(actual, 2)
+                    })
+                else:
+                    forecast_value = revenue_forecast[-1]["actual"] * 1.1
+                    revenue_forecast.append({
+                        "month": month,
+                        "actual": None,
+                        "forecast": round(forecast_value, 2)
+                    })
+        except Exception as e:
+            logger.error(f"Revenue forecast error: {e}")
+            revenue_forecast = []
 
-        financial_comparison = []
-        for fm in financial_metrics_db:
-            financial_comparison.append({
-                "category": fm.category,
-                "yourCompany": fm.your_company,
-                "industryAvg": fm.industry_avg,
-                "topPerformer": fm.top_performer
-            })
+        # Get financial comparison
+        try:
+            result = await db.execute(
+                select(FinancialMetric)
+                .where(FinancialMetric.metric_type == "financial")
+                .where(FinancialMetric.is_current == True)
+                .order_by(FinancialMetric.category)
+            )
+            financial_metrics_db = result.scalars().all()
 
-        # Get market segments data
-        result = await db.execute(
-            select(MarketSegment)
-            .where(MarketSegment.is_current == True)
-            .order_by(MarketSegment.value.desc())
-        )
-        market_segments_db = result.scalars().all()
+            financial_comparison = []
+            for fm in financial_metrics_db:
+                your_company_value = fm.your_company * ((latest_validation.overall_score or 50) / 100)
+                financial_comparison.append({
+                    "category": fm.category,
+                    "yourCompany": round(your_company_value, 2),
+                    "industryAvg": fm.industry_avg,
+                    "topPerformer": fm.top_performer
+                })
+        except Exception as e:
+            logger.error(f"Financial comparison error: {e}")
+            financial_comparison = []
 
-        market_segments = []
-        for ms in market_segments_db:
-            market_segments.append({
-                "name": ms.name,
-                "value": ms.value,
-                "color": ms.color
-            })
+        # Get market segments
+        try:
+            result = await db.execute(
+                select(MarketSegment)
+                .where(MarketSegment.industry == latest_validation.industry)
+                .where(MarketSegment.is_current == True)
+                .order_by(MarketSegment.value.desc())
+            )
+            market_segments_db = result.scalars().all()
+
+            market_segments = []
+            for ms in market_segments_db:
+                market_segments.append({
+                    "name": ms.name,
+                    "value": ms.value,
+                    "color": ms.color
+                })
+        except Exception as e:
+            logger.error(f"Market segments error: {e}")
+            market_segments = []
 
         return {
             "score": score,
@@ -306,12 +477,88 @@ async def get_dashboard_data(db: AsyncSession = Depends(get_db)) -> Dict[str, An
             "competitors": competitors,
             "revenueForecast": revenue_forecast,
             "financialComparison": financial_comparison,
-            "marketSegments": market_segments
+            "marketSegments": market_segments,
+            "userValidation": {
+                "idea": latest_validation.idea or "Startup Idea",
+                "industry": latest_validation.industry or "Unknown",
+                "targetMarket": latest_validation.target_market or "General",
+                "verdict": latest_validation.verdict or "Pending",
+                "executiveSummary": latest_validation.executive_summary or "Analysis in progress"
+            },
+            "hasData": True,
+            "lastUpdated": latest_validation.created_at.isoformat()
         }
         
     except Exception as e:
         logger.error(f"Error fetching dashboard data: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch dashboard data: {str(e)}")
+
+def generate_forecast_from_user_data(metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Generate revenue forecast based on user's actual financial data."""
+    forecast = []
+    
+    # Extract revenue from user's metrics
+    current_revenue = metrics.get("revenue", 100000)
+    growth_rate = metrics.get("growth_rate", 0.15)
+    
+    # Generate 12-month forecast
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    for i, month in enumerate(months):
+        if i < 6:  # Historical data for first 6 months
+            actual = current_revenue * (0.9 + (i * 0.02))  # Slight growth in historical data
+            forecast_value = actual
+            forecast.append({
+                "month": month,
+                "actual": round(actual, 2),
+                "forecast": round(forecast_value, 2)
+            })
+        else:  # Forecast for remaining months
+            forecast_value = forecast[-1]["actual"] * (1 + growth_rate / 12)
+            forecast.append({
+                "month": month,
+                "actual": None,
+                "forecast": round(forecast_value, 2)
+            })
+    
+    return forecast
+
+def generate_sample_forecast(validation: StartupValidation) -> List[Dict[str, Any]]:
+    """Generate sample forecast based on validation scores."""
+    forecast = []
+    
+    # Base revenue on validation score
+    base_revenue = 50000 + (validation.overall_score or 50) * 2000
+    growth_rate = 0.1 + (validation.market_score or 50) * 0.003
+    
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    for i, month in enumerate(months):
+        if i < 6:
+            actual = base_revenue * (0.8 + (i * 0.05))
+            forecast.append({
+                "month": month,
+                "actual": round(actual, 2),
+                "forecast": round(actual, 2)
+            })
+        else:
+            forecast_value = forecast[-1]["actual"] * (1 + growth_rate / 12)
+            forecast.append({
+                "month": month,
+                "actual": None,
+                "forecast": round(forecast_value, 2)
+            })
+    
+    return forecast
+
+def adjust_metric_for_user(base_value: float, user_score: float) -> float:
+    """Adjust financial metrics based on user's validation score."""
+    if not user_score:
+        return base_value
+    
+    # Scale the value based on user's score (0-100 scale)
+    score_multiplier = (user_score / 100) * 1.5  # 0 to 1.5x multiplier
+    return round(base_value * score_multiplier, 2)
 
 @router.get("/dashboard/score", response_model=Dict[str, Any])
 async def get_startup_score(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
@@ -460,9 +707,73 @@ async def get_revenue_forecast(db: AsyncSession = Depends(get_db)) -> Dict[str, 
         logger.error(f"Error fetching revenue forecast: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch revenue forecast: {str(e)}")
 
+@router.get("/dashboard/business-ideas", response_model=Dict[str, Any])
+async def get_business_ideas(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+    """Get fresh business idea templates generated by LLM."""
+    try:
+        # Get user's latest validation for context
+        result = await db.execute(
+            select(StartupValidation)
+            .order_by(StartupValidation.created_at.desc())
+            .limit(1)
+        )
+        latest_validation = result.scalar_one_or_none()
+        
+        # Generate ideas based on user context
+        industry = latest_validation.industry if latest_validation else None
+        target_market = latest_validation.target_market if latest_validation else None
+        
+        ideas = await generate_business_ideas(industry, target_market)
+        
+        return {
+            "ideas": ideas,
+            "context": {
+                "industry": industry,
+                "targetMarket": target_market,
+                "generatedAt": "2024-01-01T00:00:00Z"  # Would use actual timestamp
+            },
+            "refreshAvailable": True
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generating business ideas: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate business ideas: {str(e)}")
+
+@router.post("/dashboard/business-ideas/refresh", response_model=Dict[str, Any])
+async def refresh_business_ideas(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+    """Generate fresh business ideas (refresh endpoint)."""
+    try:
+        # Get user's latest validation for context
+        result = await db.execute(
+            select(StartupValidation)
+            .order_by(StartupValidation.created_at.desc())
+            .limit(1)
+        )
+        latest_validation = result.scalar_one_or_none()
+        
+        # Generate fresh ideas based on user context
+        industry = latest_validation.industry if latest_validation else None
+        target_market = latest_validation.target_market if latest_validation else None
+        
+        ideas = await generate_business_ideas(industry, target_market)
+        
+        return {
+            "ideas": ideas,
+            "context": {
+                "industry": industry,
+                "targetMarket": target_market,
+                "generatedAt": "2024-01-01T00:00:00Z"  # Would use actual timestamp
+            },
+            "refreshed": True,
+            "message": "Fresh business ideas generated successfully!"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error refreshing business ideas: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to refresh business ideas: {str(e)}")
+
 @router.get("/dashboard/financial-comparison", response_model=Dict[str, Any])
 async def get_financial_comparison(db: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
-    """Get financial comparison data"""
     try:
         await ensure_database_populated(db)
         

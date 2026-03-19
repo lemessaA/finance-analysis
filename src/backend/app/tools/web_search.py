@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from tavily import AsyncTavilyClient
+try:
+    from tavily import AsyncTavilyClient
+    TAVILY_AVAILABLE = True
+except ImportError:
+    TAVILY_AVAILABLE = False
+    AsyncTavilyClient = None
 
 from app.config import settings
 from app.utils.logger import setup_logger
@@ -10,6 +15,10 @@ logger = setup_logger(__name__)
 
 async def tavily_search(query: str, max_results: int = 5) -> str:
     """Perform a Tavily web search and return formatted results string."""
+    if not TAVILY_AVAILABLE:
+        logger.warning("Tavily not available — returning empty search results")
+        return "No search results available (Tavily not installed)."
+    
     if not settings.TAVILY_API_KEY:
         logger.warning("TAVILY_API_KEY not set — returning empty search results")
         return "No search results available (TAVILY_API_KEY not configured)."

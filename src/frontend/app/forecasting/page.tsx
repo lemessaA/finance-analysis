@@ -27,6 +27,7 @@ export default function ForecastingPage() {
       { period: "2024-04", value: 230 },
     ],
     forecast_periods: 4,
+    model_type: "auto",
   });
 
   const [state, setState] = useState<LoadingState>("idle");
@@ -40,7 +41,13 @@ export default function ForecastingPage() {
     setResult(null);
 
     try {
-      const data = await generateForecast(form);
+      const requestData = {
+        metric: form.metric,
+        historical_data: form.historical_data,
+        forecast_periods: form.forecast_periods,
+        model_type: "auto"
+      };
+      const data = await generateForecast(requestData);
       setResult(data);
       setState("success");
     } catch (err: any) {

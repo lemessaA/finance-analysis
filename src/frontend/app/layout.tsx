@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/layout/Sidebar";
+import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Your Business Intelligence Platform",
+  title: "AI Business Intelligence Platform",
   description:
-    "Startup validation, financial analysis, and forecasting powered by multi-agent AI",
+    "Startup validation, market intelligence, and financial forecasting powered by AI",
   keywords: ["AI", "Business Intelligence", "Startup Validator", "Financial Analysis"],
 };
 
@@ -20,16 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans bg-surface text-white antialiased`}>
+      <body className={`${inter.variable} font-sans bg-slate-900 text-white antialiased`}>
         <ErrorBoundary>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 ml-64 min-h-screen p-8 overflow-auto">
-              <ErrorBoundary>
-                {children}
-              </ErrorBoundary>
-            </main>
-          </div>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ErrorBoundary>
       </body>
     </html>

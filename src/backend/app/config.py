@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./ai_biz.db"
 
     # ── CORS ──────────────────────────────────────────────────
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:8000"]
 
     # ── Logging ───────────────────────────────────────────────
     LOG_LEVEL: str = "INFO"

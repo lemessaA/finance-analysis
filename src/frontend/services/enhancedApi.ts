@@ -120,6 +120,13 @@ class ApiClient {
         enhanced.status = error.response.status;
         enhanced.isServerError = error.response.status >= 500;
         enhanced.isClientError = error.response.status >= 400 && error.response.status < 500;
+        
+        // Special handling for rate limit errors
+        if (error.response.status === 429 || 
+            (responseData?.error?.message && responseData.error.message.includes('rate limit'))) {
+          enhanced.message = 'API rate limit reached. Please wait a moment and try again.';
+          enhanced.detail = 'The AI service is temporarily rate limited. This usually resolves within a minute.';
+        }
       } else if (error.request) {
         // Network error
         enhanced.message = 'Network error. Please check your connection.';

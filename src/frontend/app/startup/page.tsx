@@ -36,8 +36,9 @@ export default function StartupPage() {
   const [form, setForm] = useState({
     idea: "",
     industry: "",
-    target_market: "Global",
-    additional_context: "",
+    targetMarket: "Global",
+    businessStage: "Early Stage",
+    description: "",
   });
   const [state, setState] = useState<LoadingState>("idle");
   const [result, setResult] = useState<StartupValidationResponse | null>(null);
@@ -127,8 +128,8 @@ export default function StartupPage() {
               <label className="block text-sm font-medium text-slate-300 mb-2">Target Market</label>
               <input
                 type="text"
-                value={form.target_market}
-                onChange={(e) => setForm({ ...form, target_market: e.target.value })}
+                value={form.targetMarket}
+                onChange={(e) => setForm({ ...form, targetMarket: e.target.value })}
                 placeholder="e.g. United States, Europe"
                 className="w-full bg-surface border border-surface-border rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition"
               />
@@ -141,8 +142,8 @@ export default function StartupPage() {
             </label>
             <textarea
               rows={2}
-              value={form.additional_context}
-              onChange={(e) => setForm({ ...form, additional_context: e.target.value })}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder="Business model, team background, constraints..."
               className="w-full bg-surface border border-surface-border rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 resize-none transition"
             />

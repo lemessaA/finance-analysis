@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #333; border-radius: 8px; }
+        button { background: #4f46e5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #6366f1; }
+        .result { margin: 10px 0; padding: 10px; background: #2d2d2d; border-radius: 4px; white-space: pre-wrap; font-family: monospace; max-height: 400px; overflow-y: auto; }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .loading { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>🔍 Frontend API Debug Test</h1>
+        <p>Testing actual browser API calls like the frontend makes...</p>
+        
+        <div>
+            <button onclick="testStartupValidation()">Test Startup Validation</button>
+            <button onclick="testMarketIntelligence()">Test Market Intelligence</button>
+            <button onclick="testForecasting()">Test Forecasting</button>
+        </div>
+        
+        <div id="result" class="result">Click a test button to start...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+
+        async function testStartupValidation() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing startup validation...';
+            resultDiv.className = 'result loading';
+            
+            try {
+                const response = await fetch(`${API_BASE}/startup/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        idea: "AI-powered meal planning app for diabetic patients",
+                        industry: "HealthTech",
+                        target_market: "United States"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ Startup Validation Success!
+Idea: ${data.idea}
+Overall Score: ${data.overall_score}/100
+Market Score: ${data.market_score}/100
+Competition Score: ${data.competition_score}/100
+Risk Score: ${data.risk_score}/100
+Verdict: ${data.verdict}
+Key Strengths: ${data.key_strengths?.length || 0} items
+Key Risks: ${data.key_risks?.length || 0} items
+Recommendations: ${data.recommendations?.length || 0} items
+
+Executive Summary: ${data.executive_summary?.substring(0, 100)}...`;
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ Startup Validation Error: ${error.message}`;
+            }
+        }
+
+        async function testMarketIntelligence() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing market intelligence...';
+            resultDiv.className = 'result loading';
+            
+            try {
+                const response = await fetch(`${API_BASE}/market/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        industry: "saas",
+                        target_market: "Global"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ Market Intelligence Success!
+Industry: ${data.industry}
+Market Size: ${data.market_size_estimate}
+CAGR: ${data.cagr_estimate}
+Trends: ${data.key_trends?.length || 0} items
+Opportunities: ${data.opportunities?.length || 0} items
+Risks: ${data.risks?.length || 0} items
+Competitors: ${data.top_competitors?.length || 0} items
+
+Market Overview: ${data.market_overview?.substring(0, 100)}...`;
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ Market Intelligence Error: ${error.message}`;
+            }
+        }
+
+        async function testForecasting() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing forecasting...';
+            resultDiv.className = 'result loading';
+            
+            try {
+                const response = await fetch(`${API_BASE}/forecasting/forecast`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        metric: "Revenue",
+                        historical_data: [
+                            { period: "2023-01", value: 100 },
+                            { period: "2023-04", value: 120 },
+                            { period: "2023-07", value: 135 }
+                        ],
+                        forecast_periods: 2,
+                        model_type: "auto"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ Forecasting Success!
+Metric: ${data.metric}
+Model: ${data.model_used}
+R²: ${data.r_squared.toFixed(3)}
+Growth Rate: ${(data.avg_growth_rate * 100).toFixed(1)}%
+Confidence: ${data.confidence}
+Data Points: ${data.data_points?.length || 0}
+
+Forecast Data:
+${data.data_points?.filter(p => p.is_forecast).map(p => `${p.period}: ${p.value.toFixed(1)}`).join('\\n') || 'None'}
+
+Interpretation: ${data.interpretation?.substring(0, 150)}...`;
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ Forecasting Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

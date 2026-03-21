@@ -255,7 +255,7 @@ export default function FinancialReportsPage() {
                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <Lightbulb className="w-5 h-5 text-yellow-400" /> Key Highlights
                 </h3>
-                {result.key_highlights?.length > 0 ? (
+                {result.key_highlights && result.key_highlights.length > 0 ? (
                   <ul className="space-y-3">
                     {result.key_highlights.map((highlight, i) => (
                       <li key={i} className="flex gap-3 text-slate-300">
@@ -273,7 +273,7 @@ export default function FinancialReportsPage() {
                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-red-400" /> Key Risks
                 </h3>
-                {result.key_risks?.length > 0 ? (
+                {result.key_risks && result.key_risks.length > 0 ? (
                   <ul className="space-y-3">
                     {result.key_risks.map((risk, i) => (
                       <li key={i} className="flex gap-3 text-slate-300">

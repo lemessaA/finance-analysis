@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Frontend Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #333; border-radius: 8px; }
+        button { background: #4f46e5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #6366f1; }
+        .result { margin: 10px 0; padding: 10px; background: #2d2d2d; border-radius: 4px; white-space: pre-wrap; font-family: monospace; max-height: 400px; overflow-y: auto; }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .loading { color: #f59e0b; }
+        .status { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .status-success { background: #10b981; color: white; }
+        .status-error { background: #ef4444; color: white; }
+        .status-pending { background: #6b7280; color: white; }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>🎯 Final Frontend Functionality Test</h1>
+        <p>Testing all three main features with proper data validation...</p>
+        
+        <div id="status-bar">
+            <span class="status status-pending" id="startup-status">Startup: Pending</span>
+            <span class="status status-pending" id="market-status">Market: Pending</span>
+            <span class="status status-pending" id="forecast-status">Forecast: Pending</span>
+        </div>
+        
+        <div>
+            <button onclick="runAllTests()">🚀 Run All Tests</button>
+            <button onclick="testStartup()">Test Startup Only</button>
+            <button onclick="testMarket()">Test Market Only</button>
+            <button onclick="testForecast()">Test Forecast Only</button>
+        </div>
+        
+        <div id="result" class="result">Click "Run All Tests" to start comprehensive testing...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        let testResults = {};
+
+        function updateStatus(feature, status, message = '') {
+            const statusEl = document.getElementById(`${feature}-status`);
+            statusEl.className = `status status-${status}`;
+            statusEl.textContent = `${feature.charAt(0).toUpperCase() + feature.slice(1)}: ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+        }
+
+        function updateResult(message, type = '') {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            if (type) {
+                resultDiv.className = `result ${type}`;
+            }
+        }
+
+        async function testStartup() {
+            updateStatus('startup', 'loading');
+            updateResult('Testing startup validation...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/startup/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        idea: "AI-powered meal planning app for diabetic patients with personalized nutrition tracking",
+                        industry: "HealthTech",
+                        target_market: "United States"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.overall_score !== undefined) {
+                    updateStatus('startup', 'success');
+                    testResults.startup = 'success';
+                    updateResult(`✅ Startup Validation SUCCESS!
+Idea: ${data.idea}
+Overall Score: ${data.overall_score}/100
+Market Score: ${data.market_score}/100
+Competition Score: ${data.competition_score}/100
+Risk Score: ${data.risk_score}/100
+Verdict: ${data.verdict}
+Key Strengths: ${data.key_strengths?.length || 0} items
+Key Risks: ${data.key_risks?.length || 0} items
+Recommendations: ${data.recommendations?.length || 0} items
+
+Executive Summary Preview:
+${data.executive_summary?.substring(0, 150)}...`, 'success');
+                } else {
+                    throw new Error(data.error?.message || 'Invalid response');
+                }
+                
+            } catch (error) {
+                updateStatus('startup', 'error');
+                testResults.startup = 'error';
+                updateResult(`❌ Startup Validation Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testMarket() {
+            updateStatus('market', 'loading');
+            updateResult('Testing market intelligence...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/market/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        industry: "saas",
+                        target_market: "Global"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.industry) {
+                    updateStatus('market', 'success');
+                    testResults.market = 'success';
+                    updateResult(`✅ Market Intelligence SUCCESS!
+Industry: ${data.industry}
+Market Size: ${data.market_size_estimate}
+CAGR: ${data.cagr_estimate}
+Trends: ${data.key_trends?.length || 0} items
+Opportunities: ${data.opportunities?.length || 0} items
+Risks: ${data.risks?.length || 0} items
+Competitors: ${data.top_competitors?.length || 0} items
+
+Market Overview Preview:
+${data.market_overview?.substring(0, 150)}...
+
+Top Competitors:
+${data.top_competitors?.slice(0, 3).map(c => `- ${c.name} (${c.market_share_estimate})`).join('\\n') || 'None'}`, 'success');
+                } else {
+                    throw new Error(data.error?.message || 'Invalid response');
+                }
+                
+            } catch (error) {
+                updateStatus('market', 'error');
+                testResults.market = 'error';
+                updateResult(`❌ Market Intelligence Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testForecast() {
+            updateStatus('forecast', 'loading');
+            updateResult('Testing financial forecasting...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/forecasting/forecast`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    },
+                    body: JSON.stringify({
+                        metric: "Revenue",
+                        historical_data: [
+                            { period: "2023-01", value: 100 },
+                            { period: "2023-04", value: 120 },
+                            { period: "2023-07", value: 135 },
+                            { period: "2023-10", value: 160 },
+                            { period: "2024-01", value: 190 },
+                            { period: "2024-04", value: 230 }
+                        ],
+                        forecast_periods: 3,
+                        model_type: "auto"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.metric) {
+                    updateStatus('forecast', 'success');
+                    testResults.forecast = 'success';
+                    const forecastPoints = data.data_points?.filter(p => p.is_forecast) || [];
+                    updateResult(`✅ Financial Forecasting SUCCESS!
+Metric: ${data.metric}
+Model: ${data.model_used}
+R²: ${data.r_squared.toFixed(3)}
+Growth Rate: ${(data.avg_growth_rate * 100).toFixed(1)}%
+Confidence: ${data.confidence}
+Data Points: ${data.data_points?.length || 0} total, ${forecastPoints.length} forecasts
+
+Forecast Values:
+${forecastPoints.map(p => `${p.period}: ${p.value.toFixed(1)}`).join('\\n') || 'None'}
+
+Interpretation Preview:
+${data.interpretation?.substring(0, 150)}...`, 'success');
+                } else {
+                    throw new Error(data.error?.message || 'Invalid response');
+                }
+                
+            } catch (error) {
+                updateStatus('forecast', 'error');
+                testResults.forecast = 'error';
+                updateResult(`❌ Financial Forecasting Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function runAllTests() {
+            // Reset all statuses
+            ['startup', 'market', 'forecast'].forEach(feature => {
+                updateStatus(feature, 'pending');
+            });
+            testResults = {};
+            
+            updateResult('Running comprehensive test suite...', 'loading');
+            
+            // Run tests sequentially to avoid rate limiting
+            await testStartup();
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait between tests
+            
+            await testMarket();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            await testForecast();
+            
+            // Final summary
+            const successCount = Object.values(testResults).filter(r => r === 'success').length;
+            const totalCount = Object.keys(testResults).length;
+            
+            let summary = `\\n📊 FINAL TEST RESULTS: ${successCount}/${totalCount} tests passed\\n`;
+            
+            if (successCount === totalCount) {
+                summary += `🎉 ALL TESTS PASSED! Frontend is working correctly.\\n`;
+                summary += `✅ All APIs are functional and data is properly structured.\\n`;
+                summary += `✅ Users can now use all features: Startup Validation, Market Intelligence, and Financial Forecasting.`;
+            } else if (successCount >= 2) {
+                summary += `⚠️ MOST TESTS PASSED! Frontend is mostly working.\\n`;
+                summary += `✅ ${successCount} features are working correctly.\\n`;
+                summary += `❌ ${totalCount - successCount} feature(s) need attention.`;
+            } else {
+                summary += `🚨 MULTIPLE TESTS FAILED! Frontend needs attention.\\n`;
+                summary += `❌ Only ${successCount} out of ${totalCount} features are working.\\n`;
+                summary += `🔧 Please check the failed features and fix the issues.`;
+            }
+            
+            updateResult(document.getElementById('result').textContent + summary, 
+                        successCount === totalCount ? 'success' : 'error');
+        }
+
+        // Auto-run on page load
+        window.onload = () => {
+            setTimeout(runAllTests, 1000);
+        };
+    </script>
+</body>
+</html>

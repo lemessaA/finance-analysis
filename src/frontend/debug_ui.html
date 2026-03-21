@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UI Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #333; border-radius: 8px; }
+        button { background: #4f46e5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #6366f1; }
+        .result { margin: 10px 0; padding: 10px; background: #2d2d2d; border-radius: 4px; white-space: pre-wrap; font-family: monospace; max-height: 400px; overflow-y: auto; }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .loading { color: #f59e0b; }
+        .form-group { margin: 10px 0; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; border-radius: 4px; border: 1px solid #555; background: #2d2d2d; color: white; }
+        label { display: block; margin: 5px 0; color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>🔍 UI Debug Test - Exact Frontend Simulation</h1>
+        <p>Testing the exact same API calls the frontend makes...</p>
+        
+        <!-- Startup Form -->
+        <div class="form-group">
+            <h3>Startup Validator Form</h3>
+            <label>Startup Idea (min 10 chars):</label>
+            <textarea id="startup-idea" rows="3">AI-powered meal planning app for diabetic patients with personalized nutrition tracking</textarea>
+            <label>Industry (min 2 chars):</label>
+            <input type="text" id="startup-industry" value="HealthTech">
+            <label>Target Market:</label>
+            <input type="text" id="startup-market" value="United States">
+            <button onclick="testStartupForm()">Submit Startup Form</button>
+        </div>
+        
+        <!-- Market Form -->
+        <div class="form-group">
+            <h3>Market Intelligence Form</h3>
+            <label>Industry:</label>
+            <input type="text" id="market-industry" value="saas">
+            <label>Target Market:</label>
+            <input type="text" id="market-target" value="Global">
+            <button onclick="testMarketForm()">Submit Market Form</button>
+        </div>
+        
+        <!-- Forecast Form -->
+        <div class="form-group">
+            <h3>Financial Forecasting Form</h3>
+            <label>Metric:</label>
+            <input type="text" id="forecast-metric" value="Revenue">
+            <label>Forecast Periods:</label>
+            <input type="number" id="forecast-periods" value="3">
+            <button onclick="testForecastForm()">Submit Forecast Form</button>
+        </div>
+        
+        <div id="result" class="result">Fill out forms and click submit to test...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        
+        function log(message) {
+            console.log(message);
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent += message + '\\n';
+        }
+        
+        function clearResult() {
+            document.getElementById('result').textContent = '';
+        }
+        
+        async function testStartupForm() {
+            clearResult();
+            log('🧪 Testing Startup Form Submission...');
+            
+            const idea = document.getElementById('startup-idea').value.trim();
+            const industry = document.getElementById('startup-industry').value.trim();
+            const targetMarket = document.getElementById('startup-market').value.trim();
+            
+            log(`Idea: "${idea}" (${idea.length} chars)`);
+            log(`Industry: "${industry}" (${industry.length} chars)`);
+            log(`Target Market: "${targetMarket}"`);
+            
+            // Validate like the frontend does
+            if (idea.length < 10) {
+                log('❌ Validation Error: Idea must be at least 10 characters');
+                return;
+            }
+            
+            if (industry.length < 2) {
+                log('❌ Validation Error: Industry must be at least 2 characters');
+                return;
+            }
+            
+            log('✅ Form validation passed');
+            log('📡 Sending API request...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/startup/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        idea: idea,
+                        industry: industry,
+                        target_market: targetMarket
+                    })
+                });
+                
+                log(`📊 Response Status: ${response.status} ${response.statusText}`);
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ API Success!');
+                    log(`📈 Overall Score: ${data.overall_score}/100`);
+                    log(`🎯 Verdict: ${data.verdict}`);
+                    log(`💪 Key Strengths: ${data.key_strengths?.length || 0} items`);
+                    log(`⚠️  Key Risks: ${data.key_risks?.length || 0} items`);
+                    log(`💡 Recommendations: ${data.recommendations?.length || 0} items`);
+                    log('📋 Executive Summary:');
+                    log(data.executive_summary?.substring(0, 200) + '...');
+                } else {
+                    log('❌ API Error:');
+                    log(JSON.stringify(data, null, 2));
+                }
+                
+            } catch (error) {
+                log(`❌ Network Error: ${error.message}`);
+            }
+        }
+        
+        async function testMarketForm() {
+            clearResult();
+            log('🧪 Testing Market Form Submission...');
+            
+            const industry = document.getElementById('market-industry').value.trim();
+            const targetMarket = document.getElementById('market-target').value.trim();
+            
+            log(`Industry: "${industry}"`);
+            log(`Target Market: "${targetMarket}"`);
+            
+            if (!industry) {
+                log('❌ Validation Error: Industry is required');
+                return;
+            }
+            
+            log('✅ Form validation passed');
+            log('📡 Sending API request...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/market/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        industry: industry,
+                        target_market: targetMarket
+                    })
+                });
+                
+                log(`📊 Response Status: ${response.status} ${response.statusText}`);
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ API Success!');
+                    log(`🏢 Industry: ${data.industry}`);
+                    log(`💰 Market Size: ${data.market_size_estimate}`);
+                    log(`📈 CAGR: ${data.cagr_estimate}`);
+                    log(`🔍 Trends: ${data.key_trends?.length || 0} items`);
+                    log(`🎯 Opportunities: ${data.opportunities?.length || 0} items`);
+                    log(`⚠️  Risks: ${data.risks?.length || 0} items`);
+                    log(`🏆 Competitors: ${data.top_competitors?.length || 0} items`);
+                    log('📋 Market Overview:');
+                    log(data.market_overview?.substring(0, 200) + '...');
+                } else {
+                    log('❌ API Error:');
+                    log(JSON.stringify(data, null, 2));
+                }
+                
+            } catch (error) {
+                log(`❌ Network Error: ${error.message}`);
+            }
+        }
+        
+        async function testForecastForm() {
+            clearResult();
+            log('🧪 Testing Forecast Form Submission...');
+            
+            const metric = document.getElementById('forecast-metric').value.trim();
+            const periods = parseInt(document.getElementById('forecast-periods').value);
+            
+            log(`Metric: "${metric}"`);
+            log(`Forecast Periods: ${periods}`);
+            
+            // Use the same default data as the frontend
+            const historicalData = [
+                { period: "2023-01", value: 100 },
+                { period: "2023-04", value: 120 },
+                { period: "2023-07", value: 135 },
+                { period: "2023-10", value: 160 },
+                { period: "2024-01", value: 190 },
+                { period: "2024-04", value: 230 }
+            ];
+            
+            log(`📊 Historical Data Points: ${historicalData.length} items`);
+            
+            log('✅ Form validation passed');
+            log('📡 Sending API request...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/forecasting/forecast`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        metric: metric,
+                        historical_data: historicalData,
+                        forecast_periods: periods,
+                        model_type: "auto"
+                    })
+                });
+                
+                log(`📊 Response Status: ${response.status} ${response.statusText}`);
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ API Success!');
+                    log(`📈 Metric: ${data.metric}`);
+                    log(`🤖 Model: ${data.model_used}`);
+                    log(`📊 R²: ${data.r_squared.toFixed(3)}`);
+                    log(`📈 Growth Rate: ${(data.avg_growth_rate * 100).toFixed(1)}%`);
+                    log(`🎯 Confidence: ${data.confidence}`);
+                    log(`📊 Data Points: ${data.data_points?.length || 0} total`);
+                    
+                    const forecastPoints = data.data_points?.filter(p => p.is_forecast) || [];
+                    log(`🔮 Forecast Points: ${forecastPoints.length}`);
+                    log('📋 Forecast Values:');
+                    forecastPoints.forEach(p => {
+                        log(`  ${p.period}: ${p.value.toFixed(1)}`);
+                    });
+                } else {
+                    log('❌ API Error:');
+                    log(JSON.stringify(data, null, 2));
+                }
+                
+            } catch (error) {
+                log(`❌ Network Error: ${error.message}`);
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = () => {
+            log('🚀 UI Debug Test Ready');
+            log('📝 Fill in the forms above and click submit to test API calls');
+            log('🔍 This simulates exactly what the frontend does');
+        };
+    </script>
+</body>
+</html>

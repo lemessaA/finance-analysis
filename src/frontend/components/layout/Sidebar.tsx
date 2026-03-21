@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Lightbulb,
   FileText,
   TrendingUp,
@@ -13,7 +12,6 @@ import {
 import clsx from "clsx";
 
 const navItems = [
-  { href: "/dashboard",   label: "Dashboard",        icon: LayoutDashboard },
   { href: "/startup",     label: "Startup Validator", icon: Lightbulb  },
   { href: "/market",      label: "Market Intel",      icon: LineChart  },
   { href: "/reports",     label: "Financial Reports", icon: FileText   },

@@ -18,7 +18,8 @@ COMPETITOR_PROMPT = ChatPromptTemplate.from_messages(
             "3. Competitive moats and differentiation opportunities\n"
             "4. Competitive positioning matrix\n"
             "5. Blue ocean strategy opportunities\n\n"
-            "Use the search results to ground your analysis in real companies.",
+            "Use the search results to ground your analysis in real companies."
+            ,
         ),
         (
             "human",

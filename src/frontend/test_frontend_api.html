@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #1a1a1a; color: white; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #333; border-radius: 8px; }
+        button { background: #4f46e5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #6366f1; }
+        .result { margin: 10px 0; padding: 10px; background: #2d2d2d; border-radius: 4px; white-space: pre-wrap; }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        input, select { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #555; background: #2d2d2d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Frontend API Test</h1>
+        <p>Testing frontend-to-backend data fetching</p>
+
+        <div class="test-section">
+            <h2>Health Check Test</h2>
+            <button onclick="testHealthCheck()">Test Health Check</button>
+            <div id="health-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Forecasting API Test</h2>
+            <div>
+                <input type="text" id="metric" value="Revenue" placeholder="Metric name">
+                <input type="number" id="periods" value="2" placeholder="Forecast periods">
+            </div>
+            <button onclick="testForecasting()">Test Forecasting API</button>
+            <div id="forecast-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+
+        async function testHealthCheck() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health/`);
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Success! Status: ${data.status}, Time: ${data.timestamp}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function testForecasting() {
+            const resultDiv = document.getElementById('forecast-result');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const metric = document.getElementById('metric').value;
+                const periods = parseInt(document.getElementById('periods').value);
+                
+                const requestData = {
+                    metric: metric,
+                    historical_data: [
+                        { period: "2023-01", value: 100 },
+                        { period: "2023-04", value: 120 },
+                        { period: "2023-07", value: 135 },
+                        { period: "2023-10", value: 160 }
+                    ],
+                    forecast_periods: periods,
+                    model_type: "auto"
+                };
+                
+                const response = await fetch(`${API_BASE}/forecasting/forecast`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Forecast Success!
+Model: ${data.model_used}
+R²: ${data.r_squared.toFixed(3)}
+Growth Rate: ${(data.avg_growth_rate * 100).toFixed(1)}%
+Confidence: ${data.confidence}
+
+Forecast Points:
+${data.data_points.filter(p => p.is_forecast).map(p => `${p.period}: ${p.value.toFixed(1)}`).join('\n')}
+
+Interpretation Preview:
+${data.interpretation.substring(0, 200)}...`;
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        // Auto-test health check on page load
+        window.onload = () => {
+            testHealthCheck();
+        };
+    </script>
+</body>
+</html>

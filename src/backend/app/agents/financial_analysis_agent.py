@@ -36,10 +36,10 @@ class FinancialAnalysisAgent(BaseAgent):
 
     def __init__(self):
         super().__init__(name="FinancialAnalysisAgent", temperature=0.0)
-        # Use an LLM instance capable of structured output
+        # Use a model that supports structured output
         llm = ChatGroq(
             temperature=0.0,
-            model="openai/gpt-oss-120b",
+            model="llama-3.1-8b-instant",  # This model supports structured output
             api_key=settings.GROQ_API_KEY,
         )
         self.chain = FINANCIAL_ANALYSIS_PROMPT | llm.with_structured_output(FinancialReportResponse)
@@ -50,10 +50,39 @@ class FinancialAnalysisAgent(BaseAgent):
         # Truncate to avoid token limits (keep first 15K chars of financial data)
         truncated = text[:15000]
 
-        result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
-        # Overwrite internal bookkeeping fields
-        result.filename = filename
-        result.raw_text_length = len(text)
-        
-        self._log_done("financial analysis")
-        return result
+        try:
+            result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
+            # Overwrite internal bookkeeping fields
+            result.filename = filename
+            result.raw_text_length = len(text)
+            
+            self._log_done("financial analysis")
+            return result
+        except Exception as e:
+            # Fallback response if structured output fails
+            self._log_error(f"structured output failed: {e}")
+            # Create a basic response with the text analysis
+            return FinancialReportResponse(
+                filename=filename,
+                page_count=1,
+                metrics={
+                    "revenue": "Not disclosed",
+                    "net_profit": "Not disclosed",
+                    "operating_income": "Not disclosed",
+                    "total_assets": "Not disclosed",
+                    "total_liabilities": "Not disclosed",
+                    "cash_flow": "Not disclosed",
+                    "revenue_growth_yoy": "Not disclosed",
+                    "gross_margin": "Not disclosed",
+                    "ebitda": "Not disclosed",
+                    "ebitda_margin": "Not disclosed",
+                    "net_margin": "Not disclosed",
+                    "eps": "Not disclosed",
+                    "current_ratio": "Not disclosed",
+                    "debt_to_equity": "Not disclosed"
+                },
+                analysis=f"Unable to extract structured financial data from the document. Extracted text preview: {truncated[:500]}...",
+                key_highlights=["Document processed but structured extraction failed"],
+                key_risks=["Unable to extract financial metrics due to processing error"],
+                raw_text_length=len(text)
+            )

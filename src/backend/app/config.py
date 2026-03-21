@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     # ── LLM ───────────────────────────────────────────────────
     GROQ_API_KEY: str = "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"
-    GROQ_MODEL: str = "openai/gpt-oss-120b"
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
     GROQ_TEMPERATURE: float = 0.0
 
     # ── Search ────────────────────────────────────────────────

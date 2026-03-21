@@ -65,7 +65,29 @@ export async function generateForecast(data: {
 }
 
 // Dashboard Stats API
-export async function getPlatformStats() {
+export async function getPlatformStats(): Promise<{
+  status: string;
+  data: {
+    total_analyses: number;
+    success_rate: number;
+    api_calls: number;
+    avg_score: number;
+    recent_activity: Array<{
+      type: 'startup' | 'market' | 'forecasting' | 'analyzer';
+      title: string;
+      score?: number;
+      time: string;
+      status: string;
+    }>;
+    breakdown: {
+      startup_validations: number;
+      market_intelligence: number;
+      financial_forecasts: number;
+      financial_analyses: number;
+    };
+  };
+  last_updated: string;
+}> {
   const response = await apiClient.get('/api/v1/database/stats');
   return response;
 }

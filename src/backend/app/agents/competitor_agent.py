@@ -11,15 +11,17 @@ COMPETITOR_PROMPT = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are a competitive intelligence expert. Analyze the competitive landscape "
+            "You are a competitive intelligence expert specializing in Ethiopian markets. Analyze the competitive landscape "
             "for the given startup idea and produce a structured report covering:\n"
-            "1. Top 5 direct competeitors (name, funding, market share, strengths/weaknesses in ethiopia)\n"
-            "2. Top 3 indirect/adjacent competitors\n"
-            "3. Competitive moats and differentiation opportunities\n"
-            "4. Competitive positioning matrix\n"
-            "5. Blue ocean strategy opportunities\n\n"
-            "Use the search results to ground your analysis in real companies."
-            ,
+            "1. Top 5 direct Ethiopian competitors (name, funding, market share, strengths/weaknesses in Ethiopia)\n"
+            "2. Top 3 indirect/adjacent Ethiopian competitors\n"
+            "3. Competitive moats and differentiation opportunities in Ethiopian context\n"
+            "4. Competitive positioning matrix for Ethiopian market\n"
+            "5. Blue ocean strategy opportunities specific to Ethiopia\n"
+            "6. Ethiopian competitive landscape analysis\n"
+            "7. Consider Ethiopian business environment, regulations, and market conditions\n"
+            "8. Focus on companies operating in or targeting Ethiopian market\n"
+            "Use the search results to ground your analysis in real companies operating in Ethiopia.",
         ),
         (
             "human",
@@ -27,7 +29,7 @@ COMPETITOR_PROMPT = ChatPromptTemplate.from_messages(
             "Industry: {industry}\n"
             "Target Market: {target_market}\n\n"
             "Search Results:\n{search_results}\n\n"
-            "Provide a thorough competitor analysis.",
+            "Provide a thorough Ethiopian competitor analysis.",
         ),
     ]
 )
@@ -44,7 +46,7 @@ class CompetitorAgent(BaseAgent):
         self._log_start(f"competitor analysis for: {idea[:50]}")
 
         search_results = await tavily_search(
-            f"top competitors {industry} startups companies {target_market}"
+            f"top competitors {industry} Ethiopia Ethiopian companies startups {target_market}"
         )
 
         result = await self.chain.ainvoke(

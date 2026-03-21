@@ -51,10 +51,10 @@ async def analyze_market(payload: MarketIntelligenceRequest):
         )
         
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are a top-tier Market Intelligence Analyst.
-You have been provided with raw market research and competitor data.
-Your task is to synthesize this information into a structured JSON report.
-Be extremely concise, factual, and analytical."""),
+            ("system", """You are a top-tier Market Intelligence Analyst specializing in Ethiopian markets.
+You have been provided with raw market research and competitor data focused on Ethiopia.
+Your task is to synthesize this information into a structured JSON report with Ethiopian market focus.
+Be extremely concise, factual, and analytical. Ensure all analysis considers Ethiopian context."""),
             ("user", """
 Industry: {industry}
 Target Market: {target_market}

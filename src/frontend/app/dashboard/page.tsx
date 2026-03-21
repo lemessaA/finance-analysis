@@ -30,6 +30,33 @@ import {
   Calculator
 } from 'lucide-react';
 
+// Type definitions for API responses
+interface PlatformStats {
+  total_analyses: number;
+  success_rate: number;
+  api_calls: number;
+  avg_score: number;
+  recent_activity: Array<{
+    type: 'startup' | 'market' | 'forecasting' | 'analyzer';
+    title: string;
+    score?: number;
+    time: string;
+    status: string;
+  }>;
+  breakdown: {
+    startup_validations: number;
+    market_intelligence: number;
+    financial_forecasts: number;
+    financial_analyses: number;
+  };
+}
+
+interface StatsResponse {
+  status: string;
+  data: PlatformStats;
+  last_updated: string;
+}
+
 export default function DashboardPage() {
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -57,7 +84,7 @@ export default function DashboardPage() {
   const loadStats = async () => {
     try {
       setIsLoadingStats(true);
-      const statsData = await getPlatformStats();
+      const statsData: StatsResponse = await getPlatformStats();
       
       if (statsData.status === 'success' && statsData.data) {
         const data = statsData.data;
@@ -142,7 +169,7 @@ export default function DashboardPage() {
 
             {/* Recent Activity */}
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h2 className="text-xl font-bold text-white mb-6">Recent Activity</h2>
+              <h3 className="text-xl font-bold text-white mb-4">Recent Ethiopian Market Activity</h3>
               <div className="space-y-4">
                 {recentActivity.map((activity) => (
                   <div key={activity.id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">

@@ -14,7 +14,8 @@ import {
   Send,
   Loader2,
   LineChart as LineChartIcon,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 
 type LoadingState = "idle" | "loading" | "success" | "error";
@@ -27,7 +28,7 @@ export default function FinancialForecasting() {
       { period: "2023-04", value: 120 },
       { period: "2023-07", value: 135 },
       { period: "2023-10", value: 160 },
-      { period: "2024-01", value: 190 },
+      {period: "2024-01", value: 190 },
       { period: "2024-04", value: 230 },
     ],
     forecast_periods: 4,
@@ -37,6 +38,90 @@ export default function FinancialForecasting() {
   const [state, setState] = useState<LoadingState>("idle");
   const [result, setResult] = useState<ForecastResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Sample Ethiopian business datasets
+  const sampleDatasets = [
+    {
+      name: "Ethiopian Coffee Shop Revenue",
+      metric: "Revenue (ETB 000s)",
+      data: [
+        { period: "2023-Q1", value: 450 },
+        { period: "2023-Q2", value: 520 },
+        { period: "2023-Q3", value: 580 },
+        { period: "2023-Q4", value: 650 },
+        { period: "2024-Q1", value: 720 },
+        { period: "2024-Q2", value: 810 },
+      ],
+      description: "Quarterly revenue data for Addis Ababa coffee shop chain"
+    },
+    {
+      name: "Mobile Money Transactions Volume",
+      metric: "Transactions (Millions)",
+      data: [
+        { period: "2023-01", value: 12.5 },
+        { period: "2023-02", value: 14.2 },
+        { period: "2023-03", value: 15.8 },
+        { period: "2023-04", value: 17.3 },
+        { period: "2023-05", value: 19.1 },
+        { period: "2023-06", value: 21.4 },
+      ],
+      description: "Monthly mobile money transaction volume in Ethiopia"
+    },
+    {
+      name: "Solar Panel Sales",
+      metric: "Units Sold",
+      data: [
+        { period: "2023-Q1", value: 120 },
+        { period: "2023-Q2", value: 145 },
+        { period: "2023-Q3", value: 178 },
+        { period: "2023-Q4", value: 210 },
+        { period: "2024-Q1", value: 255 },
+        { period: "2024-Q2", value: 298 },
+      ],
+      description: "Quarterly solar panel sales for Ethiopian renewable energy company"
+    },
+    {
+      name: "E-commerce Monthly Orders",
+      metric: "Orders (Thousands)",
+      data: [
+        { period: "2023-07", value: 8.2 },
+        { period: "2023-08", value: 9.1 },
+        { period: "2023-09", value: 10.3 },
+        { period: "2023-10", value: 11.8 },
+        { period: "2023-11", value: 13.2 },
+        { period: "2023-12", value: 15.1 },
+      ],
+      description: "Monthly e-commerce orders for Ethiopian online retail platform"
+    }
+  ];
+
+  const loadSampleDataset = (dataset: typeof sampleDatasets[0]) => {
+    setForm({
+      ...form,
+      metric: dataset.metric,
+      historical_data: dataset.data,
+    });
+    setError(null);
+    setState("idle");
+  };
+
+  const addDataPoint = () => {
+    const newPoint = {
+      period: `2024-Q${form.historical_data.length % 4 + 1}`,
+      value: Math.round(form.historical_data[form.historical_data.length - 1]?.value * 1.1 || 100)
+    };
+    setForm({
+      ...form,
+      historical_data: [...form.historical_data, newPoint]
+    });
+  };
+
+  const removeDataPoint = (index: number) => {
+    setForm({
+      ...form,
+      historical_data: form.historical_data.filter((_, i) => i !== index)
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,29 +147,12 @@ export default function FinancialForecasting() {
     }
   };
 
-  const addDataPoint = () => {
-    const newPoint = {
-      period: `2024-${String(form.historical_data.length + 1).padStart(2, '0')}`,
-      value: Math.floor(Math.random() * 100) + 200
-    };
-    setForm({ ...form, historical_data: [...form.historical_data, newPoint] });
-  };
-
-  const removeDataPoint = (index: number) => {
-    if (form.historical_data.length > 3) {
-      setForm({ 
-        ...form, 
-        historical_data: form.historical_data.filter((_, i) => i !== index) 
-      });
-    }
-  };
-
   const updateDataPoint = (index: number, field: 'period' | 'value', value: string | number) => {
     const updatedData = [...form.historical_data];
     if (field === 'period') {
       updatedData[index].period = value as string;
     } else {
-      updatedData[index].value = Number(value);
+      updatedData[index].value = typeof value === 'string' ? parseFloat(value) || 0 : value;
     }
     setForm({ ...form, historical_data: updatedData });
   };
@@ -187,7 +255,24 @@ export default function FinancialForecasting() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Financial Forecasting</h2>
-            <p className="text-gray-300">AI-powered financial forecasting and predictions</p>
+            <p className="text-gray-300">AI-powered Ethiopian business financial forecasting and predictions</p>
+          </div>
+        </div>
+
+        {/* Sample Datasets */}
+        <div className="mb-6 p-4 bg-green-500/10 rounded-xl border border-green-500/30">
+          <p className="text-sm font-medium text-green-300 mb-3">📈 Sample Ethiopian Business Datasets:</p>
+          <div className="space-y-2">
+            {sampleDatasets.map((dataset, index) => (
+              <button
+                key={index}
+                onClick={() => loadSampleDataset(dataset)}
+                className="w-full text-left p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-sm"
+              >
+                <span className="text-green-400 font-medium">{dataset.name}:</span>
+                <span className="text-gray-300 ml-2">{dataset.description}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -202,7 +287,7 @@ export default function FinancialForecasting() {
                 value={form.metric}
                 onChange={(e) => setForm({ ...form, metric: e.target.value })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                placeholder="e.g., Revenue, Users, Sales"
+                placeholder="e.g., Revenue (ETB), Users, Sales Volume"
               />
             </div>
             
@@ -213,8 +298,9 @@ export default function FinancialForecasting() {
               <input
                 type="number"
                 value={form.forecast_periods}
-                onChange={(e) => setForm({ ...form, forecast_periods: parseInt(e.target.value) || 1 })}
+                onChange={(e) => setForm({ ...form, forecast_periods: parseInt(e.target.value) || 4 })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                placeholder="Number of periods to forecast"
                 min="1"
                 max="12"
               />
@@ -229,8 +315,8 @@ export default function FinancialForecasting() {
                 onChange={(e) => setForm({ ...form, model_type: e.target.value })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
               >
-                <option value="auto">Auto</option>
-                <option value="linear">Linear</option>
+                <option value="auto">Auto Select</option>
+                <option value="linear">Linear Regression</option>
                 <option value="polynomial">Polynomial</option>
                 <option value="exponential">Exponential</option>
               </select>
@@ -254,31 +340,38 @@ export default function FinancialForecasting() {
             
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {form.historical_data.map((point, index) => (
-                <div key={index} className="flex items-center space-x-2">
+                <div key={index} className="flex items-center space-x-2 p-2 bg-white/5 rounded-lg">
                   <input
                     type="text"
                     value={point.period}
-                    onChange={(e) => updateDataPoint(index, 'period', e.target.value)}
-                    className="flex-1 px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="Period"
+                    onChange={(e) => {
+                      const newData = [...form.historical_data];
+                      newData[index].period = e.target.value;
+                      setForm({ ...form, historical_data: newData });
+                    }}
+                    className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm"
+                    placeholder="Period (e.g., 2023-Q1)"
                   />
                   <input
                     type="number"
                     value={point.value}
-                    onChange={(e) => updateDataPoint(index, 'value', e.target.value)}
-                    className="flex-1 px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    onChange={(e) => {
+                      const newData = [...form.historical_data];
+                      newData[index].value = parseFloat(e.target.value) || 0;
+                      setForm({ ...form, historical_data: newData });
+                    }}
+                    className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm"
                     placeholder="Value"
                   />
-                  <button
-                    type="button"
-                    onClick={() => removeDataPoint(index)}
-                    disabled={form.historical_data.length <= 3}
-                    className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                  {form.historical_data.length > 3 && (
+                    <button
+                      type="button"
+                      onClick={() => removeDataPoint(index)}
+                      className="p-2 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

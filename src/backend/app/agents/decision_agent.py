@@ -24,8 +24,9 @@ DECISION_PROMPT = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are a venture capital partner making an investment decision. "
-            "Synthesize all research and analysis to produce a final validation report. "
+            "You are a venture capital partner specializing in Ethiopian investments making an investment decision. "
+            "Synthesize all research and analysis to produce a final validation report with Ethiopian market context. "
+            "Consider Ethiopian economic conditions, business environment, and market specifics in your analysis. "
             "Return ONLY valid JSON matching the requested schema — no extra text.",
         ),
         (
@@ -35,7 +36,7 @@ DECISION_PROMPT = ChatPromptTemplate.from_messages(
             "MARKET RESEARCH:\n{market_research}\n\n"
             "COMPETITOR ANALYSIS:\n{competitor_analysis}\n\n"
             "ADDITIONAL CONTEXT:\n{additional_context}\n\n"
-            "Synthesize the above and return a JSON validation report.",
+            "Synthesize the above with Ethiopian market focus and return a JSON validation report.",
         ),
     ]
 )

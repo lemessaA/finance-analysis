@@ -30,6 +30,44 @@ export default function MarketIntelligence() {
   const [result, setResult] = useState<MarketIntelligenceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Sample examples for users
+  const sampleExamples = [
+    {
+      industry: "Agriculture Technology",
+      targetMarket: "Ethiopia",
+      description: "Digital farming solutions and agricultural marketplace platforms"
+    },
+    {
+      industry: "FinTech",
+      targetMarket: "Ethiopian SMEs",
+      description: "Mobile banking, digital payments, and microfinance for Ethiopian small businesses"
+    },
+    {
+      industry: "Renewable Energy",
+      targetMarket: "Ethiopia Rural",
+      description: "Solar energy solutions and off-grid power systems for rural Ethiopian communities"
+    },
+    {
+      industry: "E-commerce",
+      targetMarket: "Addis Ababa",
+      description: "Online retail and delivery platforms targeting Addis Ababa urban consumers"
+    },
+    {
+      industry: "Health Technology",
+      targetMarket: "Ethiopia",
+      description: "Digital health platforms and telemedicine solutions for Ethiopian healthcare"
+    }
+  ];
+
+  const loadExample = (example: typeof sampleExamples[0]) => {
+    setForm({
+      industry: example.industry,
+      targetMarket: example.targetMarket,
+    });
+    setError(null);
+    setState("idle");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.industry.trim()) return;
@@ -94,7 +132,24 @@ export default function MarketIntelligence() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Market Intelligence</h2>
-            <p className="text-gray-300">Get comprehensive market analysis and competitor insights</p>
+            <p className="text-gray-300">Get comprehensive Ethiopian market analysis and competitor insights</p>
+          </div>
+        </div>
+
+        {/* Example Templates */}
+        <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/30">
+          <p className="text-sm font-medium text-blue-300 mb-3">📊 Sample Ethiopian Market Examples:</p>
+          <div className="space-y-2">
+            {sampleExamples.map((example, index) => (
+              <button
+                key={index}
+                onClick={() => loadExample(example)}
+                className="w-full text-left p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-sm"
+              >
+                <span className="text-blue-400 font-medium">{example.industry} → {example.targetMarket}:</span>
+                <span className="text-gray-300 ml-2">{example.description}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -109,7 +164,7 @@ export default function MarketIntelligence() {
                 value={form.industry}
                 onChange={(e) => setForm({ ...form, industry: e.target.value })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="e.g., SaaS, FinTech, Healthcare"
+                placeholder="e.g., Agriculture Technology, FinTech, Renewable Energy..."
                 required
               />
             </div>
@@ -123,11 +178,12 @@ export default function MarketIntelligence() {
                 onChange={(e) => setForm({ ...form, targetMarket: e.target.value })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Addis Ababa">Addis Ababa</option>
+                <option value="Ethiopia Rural">Ethiopia Rural</option>
+                <option value="Ethiopian SMEs">Ethiopian SMEs</option>
+                <option value="East Africa">East Africa</option>
                 <option value="Global">Global</option>
-                <option value="North America">North America</option>
-                <option value="Europe">Europe</option>
-                <option value="Asia">Asia</option>
-                <option value="United States">United States</option>
               </select>
             </div>
           </div>

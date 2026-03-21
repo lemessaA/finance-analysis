@@ -31,6 +31,43 @@ export default function StartupValidator() {
   const [result, setResult] = useState<StartupValidationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Sample examples for users
+  const sampleExamples = [
+    {
+      idea: "Mobile-based agricultural marketplace connecting Ethiopian farmers directly with urban buyers, eliminating middlemen and increasing farmer profits",
+      industry: "Agriculture Technology",
+      targetMarket: "Ethiopia",
+      businessStage: "Early Stage",
+      description: "A digital platform that uses mobile technology to connect smallholder Ethiopian farmers with urban markets, providing fair pricing and reducing supply chain inefficiencies."
+    },
+    {
+      idea: "Affordable solar-powered water purification systems for rural Ethiopian communities using locally sourced materials",
+      industry: "Clean Technology",
+      targetMarket: "Ethiopia Rural",
+      businessStage: "Prototype",
+      description: "Low-cost solar water purification systems designed specifically for rural Ethiopian communities, using locally available materials and simple maintenance requirements."
+    },
+    {
+      idea: "Digital microfinance platform for Ethiopian small businesses using mobile money and alternative credit scoring",
+      industry: "FinTech",
+      targetMarket: "Ethiopian SMEs",
+      businessStage: "Growth Stage",
+      description: "Mobile-first microfinance solution that leverages mobile money penetration and alternative data for credit scoring to serve Ethiopian small businesses."
+    }
+  ];
+
+  const loadExample = (example: typeof sampleExamples[0]) => {
+    setForm({
+      idea: example.idea,
+      industry: example.industry,
+      targetMarket: example.targetMarket,
+      businessStage: example.businessStage,
+      description: example.description,
+    });
+    setError(null);
+    setState("idle");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.idea.trim() || !form.industry.trim()) return;
@@ -100,7 +137,24 @@ export default function StartupValidator() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Startup Validator</h2>
-            <p className="text-gray-300">Get AI-powered validation for your startup idea</p>
+            <p className="text-gray-300">Get AI-powered validation for your Ethiopian startup idea</p>
+          </div>
+        </div>
+
+        {/* Example Templates */}
+        <div className="mb-6 p-4 bg-purple-500/10 rounded-xl border border-purple-500/30">
+          <p className="text-sm font-medium text-purple-300 mb-3">📝 Sample Ethiopian Startup Examples:</p>
+          <div className="space-y-2">
+            {sampleExamples.map((example, index) => (
+              <button
+                key={index}
+                onClick={() => loadExample(example)}
+                className="w-full text-left p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-sm"
+              >
+                <span className="text-purple-400 font-medium">{example.industry}:</span>
+                <span className="text-gray-300 ml-2">{example.idea.slice(0, 80)}...</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -114,7 +168,7 @@ export default function StartupValidator() {
                 value={form.idea}
                 onChange={(e) => setForm({ ...form, idea: e.target.value })}
                 className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="Describe your startup idea in detail..."
+                placeholder="e.g., Mobile marketplace connecting Ethiopian farmers with urban buyers..."
                 rows={4}
                 required
               />
@@ -130,7 +184,7 @@ export default function StartupValidator() {
                   value={form.industry}
                   onChange={(e) => setForm({ ...form, industry: e.target.value })}
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="e.g., HealthTech, FinTech, SaaS"
+                  placeholder="e.g., Agriculture Technology, FinTech, Clean Energy..."
                   required
                 />
               </div>
@@ -144,11 +198,12 @@ export default function StartupValidator() {
                   onChange={(e) => setForm({ ...form, targetMarket: e.target.value })}
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 >
+                  <option value="Ethiopia">Ethiopia</option>
+                  <option value="Addis Ababa">Addis Ababa</option>
+                  <option value="Ethiopia Rural">Ethiopia Rural</option>
+                  <option value="Ethiopian SMEs">Ethiopian SMEs</option>
+                  <option value="East Africa">East Africa</option>
                   <option value="Global">Global</option>
-                  <option value="North America">North America</option>
-                  <option value="Europe">Europe</option>
-                  <option value="Asia">Asia</option>
-                  <option value="United States">United States</option>
                 </select>
               </div>
               
@@ -163,8 +218,9 @@ export default function StartupValidator() {
                 >
                   <option value="Idea Stage">Idea Stage</option>
                   <option value="Early Stage">Early Stage</option>
+                  <option value="Prototype">Prototype</option>
                   <option value="Growth Stage">Growth Stage</option>
-                  <option value="Mature">Mature</option>
+                  <option value="Established">Established</option>
                 </select>
               </div>
             </div>
@@ -172,13 +228,13 @@ export default function StartupValidator() {
 
           <div>
             <label className="block text-sm font-medium text-gray-200 mb-2">
-              Additional Context
+              Description
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              placeholder="Any additional information about your startup..."
+              placeholder="Provide more details about your business model, target customers, revenue streams, and how your solution addresses Ethiopian market needs..."
               rows={3}
             />
           </div>

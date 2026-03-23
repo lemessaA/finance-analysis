@@ -67,10 +67,17 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState([
     { name: 'Total Analyses', value: '24', icon: BarChart3, color: 'from-blue-500 to-blue-600', change: '+12%' },
-    { name: 'Success Rate', value: '87%', icon: Target, color: 'from-green-500 to-green-600', change: '+5%' },
-    { name: 'API Calls', value: '1,284', icon: Activity, color: 'from-purple-500 to-purple-600', change: '+18%' },
-    { name: 'Avg. Score', value: '72.5', icon: TrendingUp, color: 'from-orange-500 to-orange-600', change: '+8%' },
+    { name: 'Success Rate', value: '89%', icon: TrendingUp, color: 'from-green-500 to-green-600', change: '+5%' },
+    { name: 'API Calls', value: '1.2K', icon: Activity, color: 'from-purple-500 to-purple-600', change: '+18%' },
+    { name: 'Avg Score', value: '82', icon: Target, color: 'from-orange-500 to-orange-600', change: '+7%' },
   ]);
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    setSidebarOpen(true);
+  }, []);
+  
   const [recentActivity, setRecentActivity] = useState([
     { id: 1, type: 'startup', title: 'AI Meal Planning App', score: 85, time: '2 hours ago', status: 'success' },
     { id: 2, type: 'market', title: 'SaaS Market Analysis', score: null, time: '4 hours ago', status: 'completed' },
@@ -260,17 +267,19 @@ export default function DashboardPage() {
                   <span className="text-white font-bold">AI BI Platform</span>
                 )}
               </div>
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
+              {mounted && (
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
+              )}
             </div>
 
             {/* Navigation */}
             <nav className="flex-1 p-4 space-y-2">
-              {navigation.map((item) => (
+              {mounted && navigation.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}

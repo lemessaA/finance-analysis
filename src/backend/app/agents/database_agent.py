@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import json
 import ssl
+import uuid
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -172,6 +173,40 @@ class DatabaseAgent(BaseAgent):
                 "error": str(e),
                 "operation": "error"
             }
+    
+    async def get_database_configurations(self) -> List[DatabaseConfig]:
+        """Get all database configurations."""
+        return list(self.configs.values())
+    
+    async def get_database_config(self, config_id: str) -> Optional[DatabaseConfig]:
+        """Get specific database configuration."""
+        return self.configs.get(config_id)
+    
+    async def add_database_config(self, config_data: Dict[str, Any]) -> DatabaseConfig:
+        """Add a new database configuration."""
+        config_id = config_data.get("id")
+        if not config_id:
+            config_id = str(uuid.uuid4())
+        
+        # Convert dict to DatabaseConfig
+        config = DatabaseConfig(
+            id=config_id,
+            name=config_data["name"],
+            type=DatabaseType(config_data["type"]),
+            host=config_data.get("host"),
+            port=config_data.get("port"),
+            database=config_data.get("database"),
+            username=config_data.get("username"),
+            password=config_data.get("password"),
+            ssl_mode=config_data.get("ssl_mode"),
+            connection_string=config_data.get("connection_string"),
+            is_active=config_data.get("is_active", True)
+        )
+        
+        # Store configuration
+        self.configs[config_id] = config
+        
+        return config
     
     def _build_connection_string(self, config: DatabaseConfig) -> str:
         """Build database connection string."""

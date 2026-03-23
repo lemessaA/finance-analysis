@@ -8,6 +8,7 @@ import {
   Settings,
   CheckCircle2,
   XCircle,
+  X,
   AlertTriangle,
   Eye,
   EyeOff,

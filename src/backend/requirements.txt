@@ -3,6 +3,12 @@ fastapi
 uvicorn[standard]
 python-multipart
 
+# Performance & Caching
+redis[hiredis]
+aioredis
+python-jose[cryptography]
+passlib[bcrypt]
+
 # LangChain / LangGraph
 langchain
 langchain-groq
@@ -47,3 +53,7 @@ pytest-asyncio
 
 # Dev
 ruff
+
+# Performance Monitoring
+psutil
+memory-profiler

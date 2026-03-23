@@ -1,51 +1,27 @@
-# 🤖 AI Business Intelligence Platform
+# 🤖 AI Database Chat Interface
 
-A comprehensive full-stack Agentic AI platform that combines **Startup Idea Validation**, **Financial Report Analysis**, **Market Intelligence**, and **Financial Forecasting** — powered by LangChain, LangGraph, FastAPI, and Next.js.
+A specialized AI platform that enables companies to **configure their databases** and **interact through an intelligent chat interface** — powered by LangChain, LangGraph, FastAPI, and Next.js.
 
 ---
 
-## 🌟 Key Features
+## 🌟 Core Features
 
-### 🚀 Startup Validation Engine
-- **AI-Powered Idea Analysis**: Validate startup ideas using multiple specialized AI agents
-- **Market Research Integration**: Real-time market size, growth, and trend analysis via Tavily API
-- **Competitor Intelligence**: Automated competitor landscape analysis and positioning insights
-- **Decision Scoring**: Comprehensive scoring system with detailed breakdowns and recommendations
-- **LangGraph Workflow**: Sophisticated multi-agent orchestration for thorough validation
+### �️ Database Configuration
+- **Simple Database Setup**: Easy configuration of company databases through intuitive interface
+- **Multiple Database Support**: Compatible with PostgreSQL, MySQL, SQLite, and other major databases
+- **Secure Connection**: Encrypted database connections with authentication management
+- **Schema Discovery**: Automatic detection and mapping of database schemas
+- **Connection Testing**: Real-time validation of database connectivity and credentials
+- **Multi-Database Support**: Connect and switch between multiple company databases
 
-### 📊 Financial Analysis Suite
-- **PDF Report Processing**: Extract and analyze financial metrics from uploaded PDF reports
-- **Automated Metric Extraction**: Key financial indicators automatically identified and processed
-- **Industry Benchmarking**: Compare performance against industry standards and top performers
-- **Visual Analytics**: Interactive charts and graphs for financial data visualization
-
-### 📈 Financial Forecasting
-- **ML-Based Predictions**: Machine learning models for revenue and financial forecasting
-- **Time Series Analysis**: Historical data analysis for accurate trend prediction
-- **Scenario Planning**: Multiple forecasting scenarios with confidence intervals
-- **Real-time Updates**: Dynamic forecast adjustments based on new data
-
-### 🎯 Market Intelligence
-- **TAM/SAM Analysis**: Total Addressable Market and Serviceable Available Market calculations
-- **Market Segmentation**: Detailed breakdown of market segments and opportunities
-- **Competitive Landscape**: Comprehensive competitor analysis with strengths/weaknesses
-- **Opportunity Scoring**: AI-powered assessment of market opportunities
-
-### 🗄️ Database Integration & AI Agents
-- **Natural Language to SQL**: AI agents translate user queries into structured SQL statements
-- **Real-time Data Retrieval**: Autonomous intermediaries fetch data directly from company databases
-- **API Call Generation**: Convert natural language requests into precise API calls
-- **Multi-Database Support**: Compatible with various database systems (PostgreSQL, MySQL, etc.)
-- **Query Optimization**: Intelligent query generation for optimal performance
-- **Data Security**: Secure database access with proper authentication and authorization
-
-### 👥 Human-in-the-Loop System
-- **Interactive Validation**: Human approval required for critical decisions and actions
-- **Review Workflows**: Step-by-step review process for AI-generated insights and recommendations
-- **Feedback Integration**: Continuous learning from human corrections and approvals
-- **Escalation Protocols**: Automatic escalation to human experts for ambiguous or high-stakes decisions
-- **Collaborative Decision Making**: Combine AI insights with human expertise for optimal outcomes
-- **Audit Trail**: Complete traceability of AI decisions and human interventions
+### � Intelligent Chat Interface
+- **Natural Language Queries**: Ask questions in plain English to retrieve company data
+- **Real-time Database Access**: Direct integration with configured databases through conversation
+- **Context-Aware Responses**: AI understands context and provides relevant data insights
+- **Multi-Turn Conversations**: Maintain context across multiple questions for deeper analysis
+- **Interactive Data Visualization**: Charts and graphs generated based on chat queries
+- **Query Suggestions**: AI suggests relevant questions based on available data
+- **Export Capabilities**: Export chat results and data visualizations to various formats
 
 ### 🛡️ AI Guardrails & Safety
 - **Input Validation**: Comprehensive validation of user inputs and AI-generated queries
@@ -56,13 +32,6 @@ A comprehensive full-stack Agentic AI platform that combines **Startup Idea Vali
 - **Anomaly Detection**: Real-time monitoring for unusual AI behavior or outputs
 - **Safety Protocols**: Emergency stop mechanisms for unexpected AI behavior
 
-### 📈 Interactive Dashboard
-- **Real-time Data**: Live dashboard with up-to-date metrics and insights
-- **Responsive Design**: Modern, mobile-friendly interface built with Next.js 14
-- **Interactive Charts**: Powered by Recharts for dynamic data visualization
-- **Error Handling**: Robust error handling with fallback data and retry mechanisms
-- **Dark Mode**: Professional dark-themed UI optimized for data analysis
-
 ---
 
 ## 🏗️ Architecture Overview
@@ -70,20 +39,20 @@ A comprehensive full-stack Agentic AI platform that combines **Startup Idea Vali
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Next.js Frontend                     │
-│  Dashboard │ Startup Validator │ Reports │ Forecasting  │
+│  Database Config │ Chat Interface │ Visualization │ Export  │
 └─────────────────────────┬───────────────────────────────┘
                           │ REST API
 ┌─────────────────────────▼───────────────────────────────┐
 │                  FastAPI Backend                         │
 │                                                         │
 │  ┌─────────────────┐  ┌──────────────┐  ┌───────────┐  │
-│  │ Startup         │  │ Financial    │  │ Forecast  │  │
-│  │ Validator Graph │  │ Analyzer     │  │ Engine    │  │
-│  │ (LangGraph)     │  │ (PyMuPDF)    │  │ (sklearn) │  │
+│  │ Database        │  │ Chat         │  │ Safety     │  │
+│  │ Connector       │  │ Processor    │  │ Guardrails │  │
+│  │ (SQLAlchemy)    │  │ (LangChain)  │  │ (Custom)   │  │
 │  └─────────────────┘  └──────────────┘  └───────────┘  │
 │                                                         │
-│  Market │ Competitor │ Decision │ Financial │ Forecast   │
-│  Agent  │ Agent      │ Agent    │ Agent     │ Agent      │
+│  Database │ Query │ Visualization │ Export │ Safety   │
+│  Agent    │ Agent │ Agent          │ Agent  │ Agent    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -93,14 +62,11 @@ A comprehensive full-stack Agentic AI platform that combines **Startup Idea Vali
 
 | Agent | Role | Capabilities |
 |-------|------|-------------|
-| `MarketResearchAgent` | Market Analysis | TAM/SAM analysis, trend research via Tavily API |
-| `CompetitorAgent` | Competitive Intelligence | Competitor landscape, positioning analysis |
-| `FinancialAnalysisAgent` | Financial Processing | Metric extraction from PDFs, report analysis |
-| `ForecastingAgent` | Predictive Analytics | ML-based financial forecasting interpretation |
-| `DecisionAgent` | Synthesis & Scoring | Comprehensive analysis synthesis and final scoring |
-| `DatabaseAgent` | Data Integration | Natural language to SQL conversion, real-time database queries |
-| `HumanOversightAgent` | Human-in-the-Loop | Review workflows, approval processes, feedback integration |
-| `GuardrailAgent` | Safety & Compliance | Input validation, output filtering, anomaly detection |
+| `DatabaseAgent` | Database Management | Database connection, schema discovery, query optimization |
+| `ChatAgent` | Natural Language Processing | Convert natural language to SQL, context understanding |
+| `VisualizationAgent` | Data Visualization | Generate charts and graphs from query results |
+| `ExportAgent` | Data Export | Export chat results and visualizations to various formats |
+| `SafetyAgent` | Guardrails & Compliance | Input validation, output filtering, anomaly detection |
 
 ---
 
@@ -111,14 +77,14 @@ A comprehensive full-stack Agentic AI platform that combines **Startup Idea Vali
 - Node.js 20+
 - Docker & Docker Compose (optional)
 - Groq API Key
-- Tavily API Key (optional, for enhanced web search)
+- Database credentials (PostgreSQL, MySQL, SQLite, etc.)
 
 ### 1. Clone & Configure
 ```bash
 git clone <repository-url>
 cd Startup-to-Business
 cp .env.example .env
-# Fill in your GROQ_API_KEY and TAVILY_API_KEY in .env
+# Fill in your GROQ_API_KEY and database credentials in .env
 ```
 
 ### 2. Run with Docker (Recommended)
@@ -144,7 +110,7 @@ npm run dev
 ```
 
 ### 4. Access the Application
-- **Frontend Dashboard**: http://localhost:3000
+- **Frontend Chat Interface**: http://localhost:3000
 - **API Documentation**: http://localhost:8000/docs
 - **API ReDoc**: http://localhost:8000/redoc
 
@@ -155,23 +121,29 @@ npm run dev
 ```
 Startup-to-Business/
 ├── src/
-│   ├── backend/              # FastAPI + LangGraph backend
+│   ├── backend/              # FastAPI + LangChain backend
 │   │   ├── app/
 │   │   │   ├── agents/       # AI agents implementation
 │   │   │   ├── api/          # API routes and endpoints
-│   │   │   ├── workflows/    # LangGraph workflows
+│   │   │   ├── database/     # Database connection and management
 │   │   │   ├── services/     # Business logic services
-│   │   │   ├── ml/           # Machine learning models
-│   │   │   ├── database/     # Database integration and agents
 │   │   │   ├── guardrails/   # Safety and compliance systems
-│   │   │   ├── human/        # Human-in-the-loop workflows
 │   │   │   └── tools/        # Utility tools
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
 │   ├── frontend/             # Next.js 14 App Router frontend
 │   │   ├── app/              # App Router pages
+│   │   │   ├── config/       # Database configuration pages
+│   │   │   ├── chat/         # Chat interface pages
+│   │   │   └── export/       # Export functionality pages
 │   │   ├── components/       # Reusable React components
+│   │   │   ├── database/     # Database configuration components
+│   │   │   ├── chat/         # Chat-specific components
+│   │   │   ├── ui/           # General UI components
+│   │   │   └── charts/       # Data visualization components
 │   │   ├── services/         # API service layer
+│   │   │   ├── database.ts   # Database configuration service
+│   │   │   └── chat.ts       # Chat API service
 │   │   └── types/            # TypeScript type definitions
 │   └── docker-compose.yml
 ├── .env.example              # Environment variables template
@@ -189,50 +161,30 @@ Startup-to-Business/
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `GROQ_API_KEY` | Groq API key for LLM operations | ✅ |
-| `TAVILY_API_KEY` | Tavily search API key for market research | ⚠️ |
-| `DATABASE_URL` | Database connection string | ⚠️ |
+| `DATABASE_URL` | Database connection string | ✅ |
 | `NEXT_PUBLIC_API_URL` | Backend URL for frontend | ✅ |
 | `ENVIRONMENT` | Deployment environment (development/production) | ✅ |
 | `ALLOWED_ORIGINS` | CORS allowed origins | ✅ |
 
 ### API Endpoints
 
-#### Startup Validation
-- `POST /api/v1/startup/validate` - Validate a startup idea
-- `GET /api/v1/startup/ideas` - Get validated ideas history
+#### Database Configuration
+- `POST /api/v1/database/config` - Configure database connection
+- `GET /api/v1/database/test` - Test database connectivity
+- `GET /api/v1/database/schema` - Get database schema information
+- `PUT /api/v1/database/config` - Update database configuration
 
-#### Financial Reports
-- `POST /api/v1/financial/upload` - Upload and analyze financial reports
-- `GET /api/v1/financial/metrics` - Get extracted financial metrics
-
-#### Forecasting
-- `POST /api/v1/forecasting/generate` - Generate financial forecasts
-- `GET /api/v1/forecasting/history` - Get forecasting history
-
-#### Market Intelligence
-- `POST /api/v1/market/analyze` - Analyze market opportunities
-- `GET /api/v1/market/competitors` - Get competitor analysis
-
-#### Database Integration
-- `POST /api/v1/database/query` - Execute natural language database queries
-- `GET /api/v1/database/schemas` - Get database schema information
-- `POST /api/v1/database/api-call` - Generate and execute API calls from natural language
-
-#### Human-in-the-Loop
-- `POST /api/v1/human/review` - Submit AI outputs for human review
-- `GET /api/v1/human/pending-approvals` - Get pending items requiring human approval
-- `POST /api/v1/human/approve` - Approve or reject AI-generated decisions
-- `GET /api/v1/human/audit-trail` - Get complete audit trail of decisions
+#### Chat Interface
+- `POST /api/v1/chat/query` - Send natural language queries to chat interface
+- `GET /api/v1/chat/history` - Get chat conversation history
+- `POST /api/v1/chat/visualize` - Generate data visualizations from chat queries
+- `GET /api/v1/chat/suggestions` - Get AI-suggested questions based on available data
+- `POST /api/v1/chat/export` - Export chat results and visualizations
 
 #### Guardrails & Safety
 - `POST /api/v1/guardrails/validate` - Validate inputs and outputs against safety rules
 - `GET /api/v1/guardrails/policies` - Get current safety and compliance policies
 - `POST /api/v1/guardrails/report` - Report safety concerns or anomalies
-
-#### Dashboard
-- `GET /api/v1/dashboard/dashboard` - Get comprehensive dashboard data
-- `GET /api/v1/dashboard/score` - Get startup validation score
-- `GET /api/v1/dashboard/market-analysis` - Get market analysis summary
 
 ---
 

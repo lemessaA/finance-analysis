@@ -8,6 +8,8 @@ import MarketIntelligence from '@/components/MarketIntelligence';
 import FinancialForecasting from '@/components/FinancialForecasting';
 import Reports from '@/components/Reports';
 import FinancialReportAnalyzer from '@/components/FinancialReportAnalyzer';
+import DatabaseConfiguration from '@/components/DatabaseConfiguration';
+import IntelligentChat from '@/components/IntelligentChat';
 import { 
   Brain, 
   TrendingUp, 
@@ -27,7 +29,9 @@ import {
   DollarSign,
   Globe,
   Search,
-  Calculator
+  Calculator,
+  Database,
+  MessageCircle
 } from 'lucide-react';
 
 // Type definitions for API responses
@@ -144,6 +148,8 @@ export default function DashboardPage() {
     { name: 'Financial Forecasting', icon: Brain, id: 'forecasting' },
     { name: 'Financial Analyzer', icon: Calculator, id: 'analyzer' },
     { name: 'Reports', icon: FileText, id: 'reports' },
+    { name: 'Database Config', icon: Database, id: 'database' },
+    { name: 'Intelligent Chat', icon: MessageCircle, id: 'chat' },
   ];
 
   const renderContent = () => {
@@ -220,6 +226,12 @@ export default function DashboardPage() {
       
       case 'analyzer':
         return <FinancialReportAnalyzer />;
+      
+      case 'database':
+        return <DatabaseConfiguration />;
+      
+      case 'chat':
+        return <IntelligentChat />;
       
       default:
         return <Reports />;

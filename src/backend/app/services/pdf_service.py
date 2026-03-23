@@ -44,7 +44,7 @@ def _extract(content: bytes) -> Tuple[str, int]:
             (priority_pages if any(k in text.lower() for k in financial_keywords) else other_pages).append(text)
 
         combined = "\n\n".join(priority_pages + other_pages)
-        return combined[:15000], page_count
+        return combined[:50000], page_count
 
     except Exception as exc:
         logger.error(f"PDF extraction error: {exc}")

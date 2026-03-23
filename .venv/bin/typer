@@ -1,4 +1,4 @@
-#!/home/lemessa-ahmed/Startup-to-Business/.venv/bin/python3
+#!/home/lemessa-ahmed/Desktop/Startup-to-Business/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import sys
 from typer.cli import main

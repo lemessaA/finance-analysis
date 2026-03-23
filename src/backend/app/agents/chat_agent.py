@@ -52,6 +52,7 @@ class ConversationContext:
         self.query_history: List[Dict[str, Any]] = []
         self.visualization_requests: List[Dict[str, Any]] = []
         self.user_preferences: Dict[str, Any] = {}
+        self.database_id: Optional[str] = None
         self.session_start = datetime.now()
     
     def add_message(self, message: Union[HumanMessage, AIMessage]):
@@ -195,7 +196,7 @@ class IntelligentChatAgent(BaseAgent):
             stats = await database_agent.get_database_stats(database_id)
             conversation = self.get_or_create_conversation(session_id)
             conversation.update_database_context(stats.get("statistics", {}).get("tables", []))
-            self.current_database = database_id
+            conversation.database_id = database_id
             logger.info(f"Initialized database context for session {session_id}")
         except Exception as e:
             logger.error(f"Error initializing database context: {e}")
@@ -207,12 +208,80 @@ class IntelligentChatAgent(BaseAgent):
             conversation = self.get_or_create_conversation(session_id)
             conversation.add_message(HumanMessage(content=user_query))
             
-            # For now, return a simple response
-            response = ChatResponse(
-                message=f"I've received your query: '{user_query}'. This is a placeholder response as the chat agent is being set up.",
-                confidence_score=0.8,
-                suggestions=["Try asking about your data", "Show me table names", "What columns are available?"]
-            )
+            # Get database ID from conversation context
+            database_id = conversation.database_id
+            if not database_id:
+                response = ChatResponse(
+                    message="No database is connected. Please connect to a database first.",
+                    confidence_score=0.0,
+                    suggestions=["Connect to a database", "Check database configurations"]
+                )
+                conversation.add_message(AIMessage(content=response.message))
+                return response
+            
+            # Try to process the query with SQL
+            try:
+                # Simple SQL generation for common queries
+                sql_query = self._generate_sql_query(user_query, database_id)
+                
+                if sql_query:
+                    # Execute the query
+                    result = await database_agent.execute_query(database_id, sql_query)
+                    
+                    if result.get("success"):
+                        data = result.get("data", [])
+                        query_info = {
+                            "sql": sql_query,
+                            "rows_returned": len(data),
+                            "execution_time": result.get("execution_time", 0)
+                        }
+                        
+                        # Format response
+                        if data:
+                            message = f"Query executed successfully. Found {len(data)} results."
+                            if len(data) <= 5:
+                                # Show first few results
+                                message += f"\n\nResults:\n{self._format_data_as_table(data)}"
+                        else:
+                            message = "Query executed successfully, but no results were found."
+                        
+                        response = ChatResponse(
+                            message=message,
+                            confidence_score=0.9,
+                            data=data[:10],  # Limit to 10 results
+                            query_info=query_info,
+                            suggestions=[
+                                "Show me more details",
+                                "Export this data",
+                                "Create a visualization"
+                            ]
+                        )
+                    else:
+                        response = ChatResponse(
+                            message=f"Query failed: {result.get('error', 'Unknown error')}",
+                            confidence_score=0.0,
+                            suggestions=["Check your query syntax", "Verify table names", "Try a simpler query"]
+                        )
+                else:
+                    # No SQL generated, provide helpful response
+                    response = ChatResponse(
+                        message=f"I understand you want to: '{user_query}'. Try asking in a more specific way, like 'Show all employees' or 'What are the table names?'",
+                        confidence_score=0.6,
+                        suggestions=[
+                            "Show all tables",
+                            "Show table columns",
+                            "Count records in a table",
+                            "Filter data by conditions"
+                        ]
+                    )
+                    
+            except Exception as e:
+                logger.error(f"Error executing query: {e}")
+                response = ChatResponse(
+                    message=f"I had trouble processing that query. Error: {str(e)}",
+                    confidence_score=0.0,
+                    suggestions=["Try rephrasing your question", "Check if the database is connected", "Use simpler terms"]
+                )
             
             conversation.add_message(AIMessage(content=response.message))
             return response
@@ -267,6 +336,90 @@ class IntelligentChatAgent(BaseAgent):
         except Exception as e:
             logger.error(f"Error clearing conversation: {e}")
             return False
+    
+    def _generate_sql_query(self, user_query: str, database_id: str) -> Optional[str]:
+        """Generate SQL query from natural language."""
+        query_lower = user_query.lower()
+        
+        # Get current database type
+        db_type = None
+        config = database_agent.configs.get(database_id)
+        if config:
+            db_type = config.type.value
+        
+        # Table information queries
+        if any(keyword in query_lower for keyword in ["tables", "table names", "show tables"]):
+            if db_type == "postgresql":
+                return "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+            elif db_type == "mysql":
+                return "SHOW TABLES"
+            else:  # SQLite
+                return "SELECT name FROM sqlite_master WHERE type='table'"
+        
+        # Column information queries
+        if any(keyword in query_lower for keyword in ["columns", "schema", "structure"]):
+            # Try to extract table name
+            words = query_lower.split()
+            for i, word in enumerate(words):
+                if word in ["table", "of"] and i + 1 < len(words):
+                    table_name = words[i + 1]
+                    if db_type == "postgresql":
+                        return f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table_name}'"
+                    elif db_type == "mysql":
+                        return f"DESCRIBE {table_name}"
+                    else:  # SQLite
+                        return f"PRAGMA table_info({table_name})"
+            # Fallback to showing tables
+            if db_type == "postgresql":
+                return "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+            elif db_type == "mysql":
+                return "SHOW TABLES"
+            else:  # SQLite
+                return "SELECT name FROM sqlite_master WHERE type='table'"
+        
+        # Count queries
+        if "count" in query_lower or "how many" in query_lower:
+            # Try to extract table name
+            words = query_lower.split()
+            for word in words:
+                if word in ["employees", "sales", "users", "orders", "products", "clients", "customers"]:
+                    return f"SELECT COUNT(*) FROM {word}"
+            return "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public'"
+        
+        # Show all queries
+        if any(keyword in query_lower for keyword in ["show all", "all", "list all"]):
+            # Try to extract table name
+            words = query_lower.split()
+            for word in words:
+                if word in ["employees", "sales", "users", "orders", "products", "clients", "customers"]:
+                    return f"SELECT * FROM {word} LIMIT 10"
+            # Default to showing tables
+            if db_type == "postgresql":
+                return "SELECT tablename FROM pg_tables WHERE schemaname = 'public' LIMIT 10"
+            else:
+                return "SELECT * FROM employees LIMIT 10"
+        
+        return None
+    
+    def _format_data_as_table(self, data: List[Dict[str, Any]]) -> str:
+        """Format data as a simple text table."""
+        if not data:
+            return "No data"
+        
+        # Get column names from first row
+        columns = list(data[0].keys())
+        
+        # Create header
+        header = " | ".join(columns)
+        separator = "-" * len(header)
+        
+        # Create rows
+        rows = []
+        for row in data[:5]:  # Limit to 5 rows
+            row_str = " | ".join(str(row.get(col, "")) for col in columns)
+            rows.append(row_str)
+        
+        return f"{header}\n{separator}\n" + "\n".join(rows)
 
 
 # Global chat agent instance

@@ -230,7 +230,18 @@ class DatabaseAgent(BaseAgent):
         
         # Add SSL configuration if specified
         if config.ssl_mode:
-            connection_string += f"?sslmode={config.ssl_mode}"
+            if config.type == DatabaseType.POSTGRESQL:
+                # PostgreSQL uses sslmode parameter
+                if config.ssl_mode.lower() in ['require', 'verify-ca', 'verify-full']:
+                    connection_string += f"?sslmode={config.ssl_mode.lower()}"
+                else:
+                    connection_string += f"?sslmode=prefer"
+            elif config.type == DatabaseType.MYSQL:
+                # MySQL uses ssl parameter
+                connection_string += f"?ssl={'true' if config.ssl_mode.lower() != 'disable' else 'false'}"
+            else:
+                # Other databases - generic SSL
+                connection_string += f"?ssl={'true' if config.ssl_mode.lower() != 'disable' else 'false'}"
         
         return connection_string
     
@@ -253,15 +264,23 @@ class DatabaseAgent(BaseAgent):
                 }
             })
         else:
-            # SSL and connection settings for other databases
+            # Connection settings for other databases
             connect_args = {}
-            if config.ssl_mode and config.ssl_mode != "disable":
-                connect_args["ssl"] = {
-                    "sslmode": config.ssl_mode,
-                    "sslcert": None,  # Can be configured for client certificates
-                    "sslkey": None,
-                    "sslrootcert": None
-                }
+            
+            # Add database-specific connection args
+            if config.type == DatabaseType.POSTGRESQL:
+                # PostgreSQL connection args
+                if config.ssl_mode and config.ssl_mode != "disable":
+                    connect_args["sslmode"] = config.ssl_mode.lower()
+            elif config.type == DatabaseType.MYSQL:
+                # MySQL connection args
+                if config.ssl_mode and config.ssl_mode != "disable":
+                    connect_args["ssl"] = {
+                        "sslmode": config.ssl_mode,
+                        "sslcert": None,
+                        "sslkey": None,
+                        "sslrootcert": None
+                    }
             
             if connect_args:
                 engine_kwargs["connect_args"] = connect_args

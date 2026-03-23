@@ -39,7 +39,7 @@ class FinancialAnalysisAgent(BaseAgent):
         # Use a model that supports structured output
         llm = ChatGroq(
             temperature=0.0,
-            model="llama-3.1-8b-instant",  # This model supports structured output
+            model="openai/gpt-oss-20b",  # This model supports structured output
             api_key=settings.GROQ_API_KEY,
         )
         self.chain = FINANCIAL_ANALYSIS_PROMPT | llm.with_structured_output(FinancialReportResponse)
@@ -48,7 +48,7 @@ class FinancialAnalysisAgent(BaseAgent):
         self._log_start(f"financial analysis of {filename}")
 
         # Truncate to avoid token limits (keep first 15K chars of financial data)
-        truncated = text[:15000]
+        truncated = text[:50000]
 
         try:
             result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})

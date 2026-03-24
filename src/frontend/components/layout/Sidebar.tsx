@@ -30,7 +30,7 @@ export default function Sidebar() {
             <Brain className="w-5 h-5 text-white" />
           </div>
           <div> 
-            <p className="text-sm font-bold text-white leading-tight">Your Business Intelligence</p>
+            <p className="text-sm font-bold text-white leading-tight">Your Business insights </p>
             <p className="text-xs text-slate-400">Platform v1.0</p>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="p-4 border-t border-surface-border">
         <p className="text-xs text-slate-500 text-center">
-          Powered by GPT-4o + LangGraph
+          Powered by GPT-4o/llama + LangGraph
         </p>
       </div>
     </aside>

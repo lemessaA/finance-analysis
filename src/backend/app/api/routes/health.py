@@ -9,7 +9,7 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "service": "AI Business Intelligence Platform",
+        "service": "Business Insights",
     }
 
 

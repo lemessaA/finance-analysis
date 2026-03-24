@@ -7,10 +7,10 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "AI Business Intelligence Platform",
+  title: "Business Insights - AI Intelligence Platform",
   description:
-    "Startup validation, market intelligence, and financial forecasting powered by AI",
-  keywords: ["AI", "Business Intelligence", "Startup Validator", "Financial Analysis"],
+    "AI-powered platform for business analytics, database queries, and data insights",
+  keywords: ["AI", "Business Intelligence", "Data Analytics", "Business Insights", "Database Queries"],
 };
 
 export default function RootLayout({

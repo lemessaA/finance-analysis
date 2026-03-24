@@ -35,15 +35,15 @@ async def lifespan(app: FastAPI):  # noqa: ARG001
     
     yield
     
-    logger.info("�👋 Shutting down AI Business Intelligence Platform...")
+    logger.info("👋 Shutting down Business Insights Platform...")
 
 
 app = FastAPI(
-    title=settings.APP_NAME,
+    title="Business Insights",
     version=settings.VERSION,
     description=(
-        "Agentic AI platform for startup validation, financial analysis, "
-        "and forecasting powered by LangGraph & GPT-4o."
+        "AI-powered platform for business analytics, database queries, "
+        "and data insights powered by LangGraph & GPT-4o."
     ),
     docs_url="/docs",
     redoc_url="/redoc",

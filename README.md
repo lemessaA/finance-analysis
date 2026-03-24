@@ -1,6 +1,6 @@
-# 🤖 AI Database Chat Interface
+# 📊 Business Insights - AI Intelligence Platform
 
-A specialized AI platform that enables companies to **configure their databases** and **interact through an intelligent chat interface** — powered by LangChain, LangGraph, FastAPI, and Next.js.
+A specialized AI platform that enables companies to **configure their databases** and **interact through an intelligent chat interface** — **Business Insights** transforms how businesses access and analyze their data with AI-powered analytics.
 
 ---
 

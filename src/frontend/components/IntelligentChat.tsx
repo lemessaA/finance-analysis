@@ -318,7 +318,7 @@ export default function IntelligentChat() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">
-                Intelligent Chat Interface
+                Chat with Your Data
               </h1>
               <p className="text-slate-400">
                 Ask questions in plain English to retrieve and analyze your company data

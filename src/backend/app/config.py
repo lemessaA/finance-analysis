@@ -30,6 +30,17 @@ class Settings(BaseSettings):
     # ── Logging ───────────────────────────────────────────────
     LOG_LEVEL: str = "INFO"
 
+    # ── M-Pesa ──────────────────────────────────────────────
+    MPESA_CONSUMER_KEY: str = ""
+    MPESA_CONSUMER_SECRET: str = ""
+    MPESA_PASSKEY: str = ""
+    MPESA_SHORTCODE: str = ""
+    MPESA_INITIATOR_NAME: str = ""
+    MPESA_ENVIRONMENT: str = "sandbox"  # sandbox or production
+    MPESA_CALLBACK_URL: str = "http://localhost:8000/api/v1/mpesa/callback"
+    MPESA_CONFIRMATION_URL: str = "http://localhost:8000/api/v1/mpesa/confirmation"
+    MPESA_VALIDATION_URL: str = "http://localhost:8000/api/v1/mpesa/validation"
+
     model_config = {"env_file": ".env", "case_sensitive": True, "extra": "ignore"}
 
 

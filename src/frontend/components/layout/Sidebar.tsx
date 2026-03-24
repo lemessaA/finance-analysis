@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Brain,
   LineChart,
+  Smartphone,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -16,6 +17,7 @@ const navItems = [
   { href: "/market",      label: "Market Intel",      icon: LineChart  },
   { href: "/reports",     label: "Financial Reports", icon: FileText   },
   { href: "/forecasting", label: "ML Forecasting",    icon: Brain       },
+  { href: "/mpesa",       label: "M-Pesa Payments",   icon: Smartphone   },
 ];
 
 export default function Sidebar() {

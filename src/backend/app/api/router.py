@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import health, startup_validation, financial_reports, forecasting, market_intelligence, database, monitoring, advanced_financial, database_config, intelligent_chat
+from app.api.routes import health, startup_validation, financial_reports, forecasting, market_intelligence, database, monitoring, advanced_financial, database_config, intelligent_chat, mpesa
 
 api_router = APIRouter()
 
@@ -31,4 +31,7 @@ api_router.include_router(
 )
 api_router.include_router(
     intelligent_chat.router, prefix="/intelligent-chat", tags=["Intelligent Chat"]
+)
+api_router.include_router(
+    mpesa.router, prefix="/mpesa", tags=["M-Pesa Payments"]
 )

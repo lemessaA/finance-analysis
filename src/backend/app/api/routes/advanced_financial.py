@@ -97,7 +97,7 @@ async def analyze_financial_report_advanced(
         
         # Perform advanced analysis
         analysis_result = await advanced_analyzer.analyze_comprehensive(
-            content=content,
+            text=text,
             filename=file.filename or "report.pdf",
             industry=industry,
             historical_data=historical_data

@@ -60,7 +60,7 @@ class FinancialAnalysisAgent(BaseAgent):
             return result
         except Exception as e:
             # Fallback response if structured output fails
-            self._log_error(f"structured output failed: {e}")
+            self.logger.error(f"structured output failed: {e}")
             # Create a basic response with the text analysis
             return FinancialReportResponse(
                 filename=filename,

@@ -122,7 +122,7 @@ class AdvancedFinancialAnalyzer:
     @performance_timer("advanced_financial_analysis")
     async def analyze_comprehensive(
         self, 
-        content: bytes, 
+        text: str, 
         filename: str,
         industry: Optional[str] = None,
         historical_data: Optional[List[FinancialReportResponse]] = None
@@ -131,7 +131,7 @@ class AdvancedFinancialAnalyzer:
         
         # Get base analysis
         base_analysis = await self.financial_agent.run(
-            text="",  # Will be populated by extraction service
+            text=text,  # Actually use the passed text
             filename=filename
         )
         

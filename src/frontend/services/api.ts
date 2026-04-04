@@ -1,5 +1,24 @@
 import { apiClient } from '@/services/enhancedApi';
 
+// Get current language from localStorage
+const getCurrentLanguage = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('language') || 'en';
+  }
+  return 'en';
+};
+
+// Add language interceptor
+apiClient.interceptors.request.use((config) => {
+  const language = getCurrentLanguage();
+  config.headers = {
+    ...config.headers,
+    'Accept-Language': language,
+    'Content-Language': language,
+  };
+  return config;
+});
+
 // Startup validation API
 export async function validateStartup(data: {
   idea: string;

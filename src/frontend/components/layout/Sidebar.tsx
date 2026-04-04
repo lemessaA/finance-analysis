@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation } from 'react-i18next';
 import {
   Lightbulb,
   FileText,
@@ -11,17 +12,20 @@ import {
   Smartphone,
 } from "lucide-react";
 import clsx from "clsx";
-
-const navItems = [
-  { href: "/startup",     label: "Startup Validator", icon: Lightbulb  },
-  { href: "/market",      label: "Market Intel",      icon: LineChart  },
-  { href: "/reports",     label: "Financial Reports", icon: FileText   },
-  { href: "/forecasting", label: "ML Forecasting",    icon: Brain       },
-  { href: "/mpesa",       label: "M-Pesa Payments",   icon: Smartphone   },
-];
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { href: "/dashboard",   label: t('navigation.dashboard'),   icon: TrendingUp },
+    { href: "/startup",     label: t('navigation.startup'),     icon: Lightbulb  },
+    { href: "/market",      label: t('navigation.market'),      icon: LineChart  },
+    { href: "/reports",     label: t('navigation.reports'),     icon: FileText   },
+    { href: "/forecasting", label: t('navigation.forecasting'), icon: Brain       },
+    { href: "/mpesa",       label: t('navigation.mpesa'),       icon: Smartphone   },
+  ];
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-surface-card border-r border-surface-border flex flex-col z-50">
@@ -32,8 +36,11 @@ export default function Sidebar() {
             <Brain className="w-5 h-5 text-white" />
           </div>
           <div> 
-            <p className="text-sm font-bold text-white leading-tight">Your Business insights </p>
+            <p className="text-sm font-bold text-white leading-tight">{t('dashboard.title')}</p>
             <p className="text-xs text-slate-400">Platform v1.0</p>
+          </div>
+          <div className="ml-auto">
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
@@ -63,7 +70,7 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="p-4 border-t border-surface-border">
         <p className="text-xs text-slate-500 text-center">
-          Powered by GPT-4o/llama + LangGraph
+          {t('dashboard.subtitle')}
         </p>
       </div>
     </aside>

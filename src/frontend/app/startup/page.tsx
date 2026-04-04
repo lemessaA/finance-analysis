@@ -66,7 +66,7 @@ export default function StartupPage() {
     setResult(null);
 
     try {
-      const data = await validateStartup(form);
+      const data = await validateStartup(form) as any;
       setResult(data);
       setState("success");
     } catch (err: any) {

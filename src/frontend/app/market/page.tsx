@@ -34,7 +34,7 @@ export default function MarketIntelligencePage() {
     setResult(null);
 
     try {
-      const data = await getMarketIntelligence(form);
+      const data = await getMarketIntelligence(form) as any;
       setResult(data);
       setState("success");
     } catch (err: any) {
@@ -214,7 +214,7 @@ export default function MarketIntelligencePage() {
                     {result.opportunities.map((opp, i) => (
                       <li key={i} className="flex items-start gap-3 text-slate-300">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2.5 flex-shrink-0"></div>
-                        <span>{opp}</span>
+                        <span>{typeof opp === 'string' ? opp : opp.title || opp.description || JSON.stringify(opp)}</span>
                       </li>
                     ))}
                   </ul>

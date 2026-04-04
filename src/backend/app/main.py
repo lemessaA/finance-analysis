@@ -15,6 +15,7 @@ from app.middleware.performance import (
     RateLimitMiddleware,
     get_performance_stats
 )
+from app.middleware.language import LanguageMiddleware
 
 logger = setup_logger(__name__)
 
@@ -55,6 +56,9 @@ app.add_middleware(PerformanceMiddleware)
 app.add_middleware(RateLimitMiddleware, requests_per_minute=100)
 # CacheMiddleware temporarily disabled due to response body handling issues
 # app.add_middleware(CacheMiddleware, cache_ttl=300)
+
+# Add language middleware
+app.add_middleware(LanguageMiddleware)
 
 # Setup global exception handlers
 setup_global_exception_handlers(app)

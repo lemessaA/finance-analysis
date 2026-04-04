@@ -47,7 +47,7 @@ export default function ForecastingPage() {
         forecast_periods: form.forecast_periods,
         model_type: "auto"
       };
-      const data = await generateForecast(requestData);
+      const data = await generateForecast(requestData) as any;
       setResult(data);
       setState("success");
     } catch (err: any) {

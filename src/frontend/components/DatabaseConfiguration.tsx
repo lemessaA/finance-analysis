@@ -388,9 +388,9 @@ export default function DatabaseConfiguration() {
                     }`}>
                       {connectionResults[config.id].message}
                     </p>
-                    {connectionResults[config.id].response_time_ms && (
+                    {connectionResults[config.id]?.response_time_ms && (
                       <p className="text-sm text-gray-400 mt-1">
-                        Response time: {connectionResults[config.id].response_time_ms.toFixed(2)}ms
+                        Response time: {connectionResults[config.id]!.response_time_ms.toFixed(2)}ms
                       </p>
                     )}
                     {connectionResults[config.id].schema_info && (

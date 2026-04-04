@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/contexts/I18nContext';
 import { getPlatformStats } from '@/services/api';
 import StartupValidator from '@/components/StartupValidator';
 import MarketIntelligence from '@/components/MarketIntelligence';
@@ -63,13 +64,14 @@ interface StatsResponse {
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
+  const { t } = useI18n();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState([
-    { name: 'Total Analyses', value: '24', icon: BarChart3, color: 'from-blue-500 to-blue-600', change: '+12%' },
-    { name: 'Success Rate', value: '89%', icon: TrendingUp, color: 'from-green-500 to-green-600', change: '+5%' },
-    { name: 'API Calls', value: '1.2K', icon: Activity, color: 'from-purple-500 to-purple-600', change: '+18%' },
-    { name: 'Avg Score', value: '82', icon: Target, color: 'from-orange-500 to-orange-600', change: '+7%' },
+    { name: t('dashboard.stats.totalAnalyses'), value: '24', icon: BarChart3, color: 'from-blue-500 to-blue-600', change: '+12%' },
+    { name: t('dashboard.stats.successRate'), value: '89%', icon: TrendingUp, color: 'from-green-500 to-green-600', change: '+5%' },
+    { name: t('dashboard.stats.apiCalls'), value: '1.2K', icon: Activity, color: 'from-purple-500 to-purple-600', change: '+18%' },
+    { name: t('dashboard.stats.avgScore'), value: '82', icon: Target, color: 'from-orange-500 to-orange-600', change: '+7%' },
   ]);
   const [mounted, setMounted] = useState(false);
   
@@ -149,14 +151,14 @@ export default function DashboardPage() {
   };
 
   const navigation = [
-    { name: 'Overview', icon: Home, id: 'overview' },
-    { name: 'Startup Validator', icon: Lightbulb, id: 'startup' },
-    { name: 'Market Intelligence', icon: LineChart, id: 'market' },
-    { name: 'Financial Forecasting', icon: Brain, id: 'forecasting' },
-    { name: 'Financial Analyzer', icon: Calculator, id: 'analyzer' },
-    { name: 'Reports', icon: FileText, id: 'reports' },
-    { name: 'Database Config', icon: Database, id: 'database' },
-    { name: 'Intelligent Chat', icon: MessageCircle, id: 'chat' },
+    { name: t('dashboard.title'), icon: Home, id: 'overview' },
+    { name: t('navigation.startup'), icon: Lightbulb, id: 'startup' },
+    { name: t('navigation.market'), icon: LineChart, id: 'market' },
+    { name: t('navigation.forecasting'), icon: Brain, id: 'forecasting' },
+    { name: t('navigation.analyzer'), icon: Calculator, id: 'analyzer' },
+    { name: t('navigation.reports'), icon: FileText, id: 'reports' },
+    { name: t('navigation.database'), icon: Database, id: 'database' },
+    { name: t('navigation.chat'), icon: MessageCircle, id: 'chat' },
   ];
 
   const renderContent = () => {

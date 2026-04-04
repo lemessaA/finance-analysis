@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 export default function FinancialReportsPage() {
-  const [analysisMode, setAnalysisMode] = useState<"basic" | "advanced">("basic");
+  const [analysisMode, setAnalysisMode] = useState<string>("basic");
   const [file, setFile] = useState<File | null>(null);
   const [state, setState] = useState<LoadingState>("idle");
   const [result, setResult] = useState<FinancialReportResponse | null>(null);
@@ -44,7 +44,7 @@ export default function FinancialReportsPage() {
     setResult(null);
 
     try {
-      const data = await analyzeFinancialReport(file);
+      const data = await analyzeFinancialReport(file) as any;
       setResult(data);
       setState("success");
     } catch (err: any) {

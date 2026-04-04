@@ -17,17 +17,15 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = "llama-3.1-8b-instant"
     GROQ_TEMPERATURE: float = 0.0
 
-
     # ── Database ──────────────────────────────────────────────
     DATABASE_URL: str = "sqlite+aiosqlite:///./ai_biz.db"
 
     # ── CORS ──────────────────────────────────────────────────
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:8000"]
+    ALLOWED_ORIGINS: List[str] = ["*"]
 
     # ── Logging ───────────────────────────────────────────────
     LOG_LEVEL: str = "INFO"
 
- 
     model_config = {"env_file": ".env", "case_sensitive": True, "extra": "ignore"}
 
 

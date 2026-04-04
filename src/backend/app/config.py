@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # ── App ────────────────────────────────────────────────────
-    APP_NAME: str = "Business Insights"
+    APP_NAME: str = "finance"
     VERSION: str = "1.0.0"
     ENVIRONMENT: str = "development"
     DEBUG: bool = True

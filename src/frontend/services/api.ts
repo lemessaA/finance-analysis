@@ -55,7 +55,7 @@ export async function getMarketIntelligence(data?: {
 export async function analyzeFinancialReport(file: File) {
   const formData = new FormData();
   formData.append('file', file);
-  
+
   const response = await apiClient.post('/api/v1/financial/analyze', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

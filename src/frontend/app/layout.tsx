@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { I18nProvider } from "@/contexts/I18nContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Business Insights - AI Intelligence Platform",
+  title: "Financial Analysis Platform - AI-Powered Report Analyzer",
   description:
-    "AI-powered platform for business analytics, database queries, and data insights",
-  keywords: ["AI", "Business Intelligence", "Data Analytics", "Business Insights", "Database Queries"],
+    "AI-powered financial report analysis platform. Upload PDF statements and extract key metrics instantly.",
+  keywords: ["AI", "Financial Analysis", "PDF Reports", "Financial Metrics", "Report Analyzer"],
 };
 
 export default function RootLayout({
@@ -23,11 +21,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans bg-slate-900 text-white antialiased`}>
         <ErrorBoundary>
-          <I18nProvider>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
-          </I18nProvider>
+          {children}
         </ErrorBoundary>
       </body>
     </html>

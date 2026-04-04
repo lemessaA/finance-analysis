@@ -36,11 +36,11 @@ class ApiClient {
       retryDelay: 1000,
       retryCondition: (error: AxiosError) => {
         // Retry on network errors, 5xx server errors, and 429 rate limiting
-        return !error.response || 
-               error.response.status >= 500 || 
-               error.response.status === 429 ||
-               error.code === 'NETWORK_ERROR' ||
-               error.code === 'TIMEOUT';
+        return !error.response ||
+          error.response.status >= 500 ||
+          error.response.status === 429 ||
+          error.code === 'NETWORK_ERROR' ||
+          error.code === 'TIMEOUT';
       }
     };
 
@@ -72,7 +72,7 @@ class ApiClient {
         // Log successful requests in development
         if (process.env.NODE_ENV === 'development') {
           const config = response.config as ExtendedAxiosRequestConfig;
-          const duration = config.metadata?.startTime ? 
+          const duration = config.metadata?.startTime ?
             new Date().getTime() - config.metadata.startTime.getTime() : 0;
           console.log(`✅ API Request: ${response.config.method?.toUpperCase()} ${response.config.url} (${duration}ms)`);
         }
@@ -80,11 +80,11 @@ class ApiClient {
       },
       (error) => {
         const enhancedError = this.enhanceError(error);
-        
+
         // Log failed requests in development
         if (process.env.NODE_ENV === 'development') {
           const config = error.config as ExtendedAxiosRequestConfig;
-          const duration = config.metadata?.startTime ? 
+          const duration = config.metadata?.startTime ?
             new Date().getTime() - config.metadata.startTime.getTime() : 0;
           console.error(`❌ API Request: ${error.config?.method?.toUpperCase()} ${error.config?.url} (${duration}ms)`, enhancedError);
         }
@@ -120,10 +120,10 @@ class ApiClient {
         enhanced.status = error.response.status;
         enhanced.isServerError = error.response.status >= 500;
         enhanced.isClientError = error.response.status >= 400 && error.response.status < 500;
-        
+
         // Special handling for rate limit errors
-        if (error.response.status === 429 || 
-            (responseData?.error?.message && responseData.error.message.includes('rate limit'))) {
+        if (error.response.status === 429 ||
+          (responseData?.error?.message && responseData.error.message.includes('rate limit'))) {
           enhanced.message = 'API rate limit reached. Please wait a moment and try again.';
           enhanced.detail = 'The AI service is temporarily rate limited. This usually resolves within a minute.';
         }
@@ -159,7 +159,7 @@ class ApiClient {
 
   private async retryRequest(config: ExtendedAxiosRequestConfig): Promise<AxiosResponse> {
     const retryCount = config.__retryCount || 0;
-    
+
     if (retryCount >= this.retryConfig.maxRetries) {
       throw this.enhanceError(new Error('Maximum retry attempts exceeded'));
     }
@@ -168,7 +168,7 @@ class ApiClient {
     config.__retryCount = retryCount + 1;
 
     // Wait before retrying
-    await new Promise(resolve => 
+    await new Promise(resolve =>
       setTimeout(resolve, this.retryConfig.retryDelay * Math.pow(2, retryCount))
     );
 

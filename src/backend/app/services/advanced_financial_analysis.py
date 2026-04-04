@@ -190,11 +190,19 @@ class AdvancedFinancialAnalyzer:
             }
         }
     
-    def _extract_numeric_values(self, metrics: Dict[str, str]) -> Dict[str, float]:
-        """Extract numeric values from metrics strings."""
+    def _extract_numeric_values(self, metrics: Any) -> Dict[str, float]:
+        """Extract numeric values from metrics strings or Pydantic model."""
         numeric_values = {}
         
-        for key, value in metrics.items():
+        # Convert Pydantic model to dict if necessary
+        if hasattr(metrics, 'model_dump'):
+            metrics_dict = metrics.model_dump()
+        elif hasattr(metrics, 'dict'):
+            metrics_dict = metrics.dict()
+        else:
+            metrics_dict = metrics
+            
+        for key, value in metrics_dict.items():
             if value == "Not disclosed" or not value:
                 continue
             

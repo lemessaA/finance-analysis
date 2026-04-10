@@ -1,0 +1,47 @@
+[project]
+name = "startup-to-business-backend"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]",
+    "python-multipart",
+    "redis[hiredis]",
+    "aioredis",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "langchain",
+    "langchain-groq",
+    "langchain-huggingface",
+    "langchain-community",
+    "langgraph",
+    "faiss-cpu",
+    "psycopg2-binary",
+    "aiosqlite",
+    "sqlalchemy",
+    "asyncpg",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "pymupdf",
+    "alembic",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+    "httpx",
+    "tavily-python",
+    "psutil",
+    "memory-profiler",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
+[tool.uv]
+package = false
+
+[tool.fastapi]
+entrypoint = "app.main:app"

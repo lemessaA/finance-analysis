@@ -1,0 +1,13 @@
+# Ignore local database
+ai_biz.db
+
+# Ignore logs
+logs/
+
+# Ignore pycache
+__pycache__/
+*.pyc
+
+# Ignore environment variables (handled by FastAPI Cloud)
+.env
+.env.*

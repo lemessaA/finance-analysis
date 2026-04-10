@@ -56,6 +56,8 @@ export interface MarketIntelligenceResponse {
 export interface FinancialReportResponse {
   filename: string;
   analysis: string;
+  page_count: number;
+  raw_text_length: number;
   key_highlights?: string[];
   key_risks?: string[];
   summary: {

@@ -78,7 +78,7 @@ export default function FinancialReportAnalyzer() {
     setError(null);
     
     try {
-      const analysisResult = await analyzeFinancialReport(file);
+      const analysisResult = await analyzeFinancialReport(file) as any;
       setResult(analysisResult);
       setState("success");
     } catch (err: any) {

@@ -3,6 +3,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { EnhancedApiError, apiClient } from '@/services/enhancedApi';
 
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 interface UseApiOptions<T> {
   immediate?: boolean;
   onSuccess?: (data: T) => void;

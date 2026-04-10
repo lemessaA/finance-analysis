@@ -282,9 +282,12 @@ export default function Reports() {
                   <p className="text-sm text-gray-400 mb-3">Opportunities</p>
                   <ul className="space-y-2">
                     {marketData.opportunities.map((opp, i) => (
-                      <li key={i} className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">•</span>
-                        <span className="text-gray-300">{opp}</span>
+                      <li key={i} className="flex flex-col space-y-1">
+                        <div className="flex items-start space-x-2">
+                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-white font-medium">{opp.title}</span>
+                        </div>
+                        <p className="text-gray-400 text-xs ml-5">{opp.description}</p>
                       </li>
                     ))}
                   </ul>

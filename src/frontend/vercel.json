@@ -4,13 +4,5 @@
   "name": "finance-app-ui",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://finance-app.fastapicloud.dev"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_API_URL": "https://finance-app.fastapicloud.dev"
-    }
-  }
+  "installCommand": "npm install"
 }

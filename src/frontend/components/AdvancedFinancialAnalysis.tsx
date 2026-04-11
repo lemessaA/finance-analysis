@@ -13,18 +13,6 @@ import {
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-import {
-  BarChart as RechartsBarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   Radar,
   Legend
 } from "recharts";

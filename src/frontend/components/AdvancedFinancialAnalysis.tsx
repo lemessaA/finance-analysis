@@ -13,9 +13,23 @@ import {
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
+import {
+  BarChart as RechartsBarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   Radar,
   Legend
 } from "recharts";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   FileText,
   Upload,
@@ -42,7 +56,8 @@ import {
   Search,
   X,
   MessageSquare,
-  Send
+  Send,
+  Presentation
 } from "lucide-react";
 
 interface ChatMessage {
@@ -105,6 +120,11 @@ export default function AdvancedFinancialAnalysis() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  
+  // Pitch deck state
+  const [pitchDeckContent, setPitchDeckContent] = useState<string | null>(null);
+  const [investorScore, setInvestorScore] = useState<number | null>(null);
+  const [isPitchDeckLoading, setIsPitchDeckLoading] = useState(false);
 
   const industries = [
     { value: "technology", label: "Technology" },
@@ -192,6 +212,27 @@ export default function AdvancedFinancialAnalysis() {
       setChatMessages(prev => [...prev, { role: "ai", content: "Error: I couldn't process your request right now." }]);
     } finally {
       setIsChatLoading(false);
+    }
+  };
+
+  const handleGeneratePitchDeck = async () => {
+    if (!currentAnalysis?.analysis_id) return;
+    setIsPitchDeckLoading(true);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${apiBase}/api/v1/advanced/generate-pitch-deck`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ analysis_id: currentAnalysis.analysis_id })
+      });
+      if (!response.ok) throw new Error("Failed to generate pitch deck");
+      const result = await response.json();
+      setInvestorScore(result.investor_readiness_score);
+      setPitchDeckContent(result.pitch_content);
+    } catch (err) {
+      setError("Failed to generate pitch deck.");
+    } finally {
+      setIsPitchDeckLoading(false);
     }
   };
 
@@ -605,13 +646,45 @@ export default function AdvancedFinancialAnalysis() {
           </div>
         </div>
         
-        <button
-          onClick={() => setShowResults(false)}
-          className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all"
-        >
-          New Analysis
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={handleGeneratePitchDeck}
+            disabled={isPitchDeckLoading}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            {isPitchDeckLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Presentation className="w-5 h-5" />}
+            Generate Pitch Deck
+          </button>
+          <button
+            onClick={() => setShowResults(false)}
+            className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all"
+          >
+            New Analysis
+          </button>
+        </div>
       </div>
+
+      {investorScore !== null && pitchDeckContent && (
+        <div className="glass rounded-2xl p-8 mb-8 border border-purple-500/30">
+          <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-6">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <Presentation className="w-8 h-8 text-purple-400" />
+              Investor Pitch Deck & Readiness
+            </h2>
+            <div className="text-center bg-black/30 rounded-xl px-6 py-3 border border-white/10">
+              <div className="text-sm text-gray-400 mb-1">Investor Readiness Score</div>
+              <div className={`text-3xl font-bold ${getHealthScoreColor(investorScore)}`}>
+                {investorScore}/100
+              </div>
+            </div>
+          </div>
+          <div className="prose prose-invert prose-purple max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {pitchDeckContent}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
 
       {currentAnalysis && (
         <div className="space-y-8">

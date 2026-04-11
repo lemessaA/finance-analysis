@@ -36,6 +36,13 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     answer: str = Field(..., description="The AI's response")
 
+class PitchDeckRequest(BaseModel):
+    analysis_id: str = Field(..., description="The ID of the advanced analysis")
+
+class PitchDeckResponse(BaseModel):
+    investor_readiness_score: int = Field(..., description="0-100 score of how ready this is for investment")
+    pitch_content: str = Field(..., description="Markdown content for the Pitch Deck slides")
+
 
 class TrendAnalysisRequest(BaseModel):
     """Request model for trend analysis."""
@@ -466,3 +473,48 @@ async def chat_with_financials(request: ChatRequest):
             status_code=500,
             detail=f"Failed to generate response: {str(exc)}"
         )
+
+
+@router.post("/generate-pitch-deck", response_model=PitchDeckResponse)
+async def generate_pitch_deck(request: PitchDeckRequest):
+    """
+    Generate Pitch Deck export content and Investor Readiness Score.
+    """
+    analysis_id = request.analysis_id
+    if analysis_id not in _advanced_analysis_store:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+        
+    analysis_data = _advanced_analysis_store[analysis_id]
+    
+    # Calculate Investor Readiness (based on health score & risk)
+    health_score = analysis_data.get("financial_health_score", {}).get("overall_score", 50)
+    risk_assessment = analysis_data.get("risk_assessment", [])
+    high_risks = len([r for r in risk_assessment if (r.get('level', '') if isinstance(r, dict) else getattr(r, 'level', '')) in ('high', 'critical')])
+    
+    readiness_score = int(health_score) - (high_risks * 5)
+    readiness_score = max(0, min(100, readiness_score))
+    
+    context = json.dumps({
+        "metrics": analysis_data.get("base_analysis", {}).get("metrics", {}),
+        "health_score": health_score,
+        "readiness_score": readiness_score,
+        "ratios": analysis_data.get("financial_ratios", {}),
+    }, default=str)
+    
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are an expert VC associate. Create Pitch Deck content based on the provided financial context. Output Markdown format with 3 distinct slides: ## Slide 1: Financial Traction ## Slide 2: Key Metrics & Margins ## Slide 3: Growth Projections. Keep it concise, punchy, and investor-focused. Context: {context}"),
+        ("user", "Please generate the pitch deck slides.")
+    ])
+    
+    llm = ChatGroq(model=settings.GROQ_MODEL, temperature=0.7, api_key=settings.GROQ_API_KEY)
+    chain = prompt | llm
+    
+    try:
+        response = await chain.ainvoke({"context": context})
+        return {
+            "investor_readiness_score": readiness_score,
+            "pitch_content": response.content
+        }
+    except Exception as exc:
+        logger.error(f"Pitch deck generation failed: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to generate pitch deck: {str(exc)}")

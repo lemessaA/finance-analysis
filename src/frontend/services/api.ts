@@ -23,6 +23,6 @@ export async function compareFinancialReports(baselineReportId: string, currentR
 
 // Health check API
 export async function healthCheck() {
-  const response = await apiClient.get('/api/v1/health');
+  const response = await apiClient.get('/api/v1/health/');
   return response;
 }

@@ -8,11 +8,15 @@ import uuid
 from typing import Dict, List, Optional, Any
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, BackgroundTasks
 from pydantic import BaseModel, Field
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from app.config import settings
 
 from app.services.advanced_financial_analysis import advanced_analyzer
 from app.services.pdf_service import _extract
 from app.utils.performance import performance_timer
 from app.utils.logger import setup_logger
+import json
 
 logger = setup_logger(__name__)
 router = APIRouter()
@@ -24,6 +28,13 @@ class AdvancedAnalysisRequest(BaseModel):
     include_forecasting: bool = Field(True, description="Include predictive insights")
     include_benchmarking: bool = Field(True, description="Include industry benchmarking")
     analysis_depth: str = Field("comprehensive", description="Analysis depth: basic, standard, comprehensive")
+
+class ChatRequest(BaseModel):
+    analysis_id: str = Field(..., description="The ID of the advanced analysis")
+    message: str = Field(..., description="The user's question about the financials")
+
+class ChatResponse(BaseModel):
+    answer: str = Field(..., description="The AI's response")
 
 
 class TrendAnalysisRequest(BaseModel):
@@ -409,3 +420,49 @@ async def get_analytics_overview():
             "critical": len([s for s in health_scores if s < 40])
         }
     }
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat_with_financials(request: ChatRequest):
+    """
+    Chat directly with your extracted financial data.
+    """
+    analysis_id = request.analysis_id
+    if analysis_id not in _advanced_analysis_store:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+        
+    analysis_data = _advanced_analysis_store[analysis_id]
+    
+    # We serialize most of the metrics into a prompt context
+    context = json.dumps({
+        "metrics": analysis_data.get("base_analysis", {}).get("metrics", {}),
+        "health_score": analysis_data.get("financial_health_score", {}),
+        "ratios": analysis_data.get("financial_ratios", {}),
+        "risks": analysis_data.get("risk_assessment", []),
+        "recommendations": analysis_data.get("recommendations", {})
+    }, default=str)
+    
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are an expert CFO and financial advisor. You are helping a startup founder understand their financial report. Be highly professional, actionable, and reference the specific numbers provided in the context. Context: {context}"),
+        ("user", "{message}")
+    ])
+    
+    llm = ChatGroq(
+        model=settings.GROQ_MODEL,
+        temperature=0.3,
+        api_key=settings.GROQ_API_KEY
+    )
+    
+    chain = prompt | llm
+    
+    try:
+        response = await chain.ainvoke({
+            "context": context,
+            "message": request.message
+        })
+        return {"answer": response.content}
+    except Exception as exc:
+        logger.error(f"Chat failed: {exc}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate response: {str(exc)}"
+        )

@@ -40,8 +40,15 @@ import {
   Minus,
   Filter,
   Search,
-  X
+  X,
+  MessageSquare,
+  Send
 } from "lucide-react";
+
+interface ChatMessage {
+  role: "user" | "ai";
+  content: string;
+}
 
 interface AdvancedAnalysisResult {
   analysis_id: string;
@@ -93,6 +100,11 @@ export default function AdvancedFinancialAnalysis() {
   const [selectedIndustry, setSelectedIndustry] = useState<string>("");
   const [analysisDepth, setAnalysisDepth] = useState<"basic" | "standard" | "comprehensive">("comprehensive");
   const [showResults, setShowResults] = useState(false);
+  
+  // Chat feature state
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   const industries = [
     { value: "technology", label: "Technology" },
@@ -142,6 +154,9 @@ export default function AdvancedFinancialAnalysis() {
         ...prev,
         analyses: [result.analysis_result, ...prev.analyses]
       }));
+      setChatMessages([
+        { role: 'ai', content: `Hello! I've finished analyzing your ${result.analysis_result.page_count}-page financial report. Do you have any questions about the liquidity, risk, or projections?` }
+      ]);
       setShowResults(true);
     } catch (err: any) {
       setError(err.message || "Advanced analysis failed. Please try again.");
@@ -150,6 +165,35 @@ export default function AdvancedFinancialAnalysis() {
     }
   };
 
+  const handleSendMessage = async () => {
+    if (!chatInput.trim() || !currentAnalysis?.analysis_id) return;
+
+    const userMessage = chatInput.trim();
+    setChatInput("");
+    setChatMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    setIsChatLoading(true);
+
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${apiBase}/api/v1/advanced/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          analysis_id: currentAnalysis.analysis_id,
+          message: userMessage
+        })
+      });
+
+      if (!response.ok) throw new Error("Failed to send message");
+
+      const result = await response.json();
+      setChatMessages(prev => [...prev, { role: "ai", content: result.answer }]);
+    } catch (err) {
+      setChatMessages(prev => [...prev, { role: "ai", content: "Error: I couldn't process your request right now." }]);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
 
   const getHealthScoreColor = (score: number) => {
     if (score >= 85) return "text-green-500";
@@ -656,6 +700,58 @@ export default function AdvancedFinancialAnalysis() {
           {/* Recommendations */}
           {renderRecommendations(currentAnalysis.recommendations)}
           
+          {/* AI Financial Chat */}
+          <div className="glass rounded-2xl border border-white/10 overflow-hidden flex flex-col h-[500px]">
+            <div className="p-6 border-b border-white/10 bg-white/5">
+              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-purple-400" />
+                Chat with your Financials
+              </h3>
+              <p className="text-sm text-gray-400 mt-1">Ask questions directly about your submitted report and analysis.</p>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-black/20">
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] rounded-2xl p-4 ${msg.role === 'user' ? 'bg-purple-600 text-white' : 'glass border border-white/10 text-gray-200'}`}>
+                    {msg.role === 'ai' && <Brain className="w-4 h-4 mb-2 text-purple-400" />}
+                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
+                  </div>
+                </div>
+              ))}
+              {isChatLoading && (
+                <div className="flex justify-start">
+                  <div className="glass border border-white/10 rounded-2xl p-4 flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+                    <span className="text-sm text-gray-400">Analyzing...</span>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t border-white/10 bg-white/5">
+              <form 
+                onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
+                className="relative"
+              >
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Ask a question about your financials..."
+                  className="w-full pl-4 pr-12 py-4 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                />
+                <button
+                  type="submit"
+                  disabled={isChatLoading || !chatInput.trim()}
+                  className="absolute right-2 top-2 p-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          </div>
+
           {/* Analysis Metadata */}
           <div className="glass rounded-2xl p-6 border border-white/10">
             <h3 className="text-lg font-semibold text-white mb-4">Analysis Information</h3>

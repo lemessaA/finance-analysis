@@ -7,7 +7,7 @@ const nextConfig = {
   poweredByHeader: false,
   
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "https://finance-app.fastapicloud.dev",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "https://finance-app.fastapicloud.dev/api/v1",
   },
 
   // Simplified webpack config

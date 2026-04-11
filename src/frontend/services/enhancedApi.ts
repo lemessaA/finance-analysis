@@ -201,7 +201,7 @@ class ApiClient {
   // Health check method
   async healthCheck(): Promise<boolean> {
     try {
-      await this.get('/health');
+      await this.get('/api/v1/health/');
       return true;
     } catch {
       return false;

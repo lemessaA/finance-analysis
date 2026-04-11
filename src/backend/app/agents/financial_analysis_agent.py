@@ -36,13 +36,24 @@ class FinancialAnalysisAgent(BaseAgent):
 
     def __init__(self):
         super().__init__(name="FinancialAnalysisAgent", temperature=0.0)
-        # Use a model that supports structured output
-        llm = ChatGroq(
-            temperature=0.0,
-            model="openai/gpt-oss-20b",  # This model supports structured output
-            api_key=settings.GROQ_API_KEY,
-        )
-        self.chain = FINANCIAL_ANALYSIS_PROMPT | llm.with_structured_output(FinancialReportResponse)
+        
+        # Validate API key
+        if not settings.GROQ_API_KEY:
+            self.logger.warning("GROQ_API_KEY not configured, using fallback mode")
+            self.chain = None
+            return
+            
+        try:
+            # Use a model that supports structured output
+            llm = ChatGroq(
+                temperature=0.0,
+                model=settings.GROQ_MODEL,
+                api_key=settings.GROQ_API_KEY,
+            )
+            self.chain = FINANCIAL_ANALYSIS_PROMPT | llm.with_structured_output(FinancialReportResponse)
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Groq LLM: {e}")
+            self.chain = None
 
     async def run(self, text: str, filename: str) -> FinancialReportResponse:
         self._log_start(f"financial analysis of {filename}")
@@ -51,6 +62,8 @@ class FinancialAnalysisAgent(BaseAgent):
         truncated = text[:50000]
 
         try:
+            if self.chain is None:
+                raise ValueError("Chain not initialized - check API configuration")
             result: FinancialReportResponse = await self.chain.ainvoke({"text": truncated, "filename": filename})
             # Overwrite internal bookkeeping fields
             result.filename = filename

@@ -126,6 +126,10 @@ export default function AdvancedFinancialAnalysis() {
   const [investorScore, setInvestorScore] = useState<number | null>(null);
   const [isPitchDeckLoading, setIsPitchDeckLoading] = useState(false);
 
+  // Integrations state
+  const [syncSource, setSyncSource] = useState<"pdf" | "quickbooks" | "stripe">("pdf");
+  const [isSyncing, setIsSyncing] = useState(false);
+
   const industries = [
     { value: "technology", label: "Technology" },
     { value: "manufacturing", label: "Manufacturing" },
@@ -142,14 +146,28 @@ export default function AdvancedFinancialAnalysis() {
   };
 
   const performAdvancedAnalysis = async () => {
-    if (!file) return;
+    if (syncSource === "pdf" && !file) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
+      if (syncSource !== "pdf") {
+        setIsSyncing(true);
+        // Simulate a 2-second external API sync (QuickBooks/Stripe)
+        await new Promise(r => setTimeout(r, 2000));
+        setIsSyncing(false);
+      }
+
+      // If we're mocking the external sync, we pass a dummy file to the backend
+      // In a real implementation, the backend would have a separate endpoint for this
       const formData = new FormData();
-      formData.append("file", file);
+      if (syncSource === "pdf" && file) {
+        formData.append("file", file);
+      } else {
+        const dummyBlob = new Blob(["Simulated financial extract from " + syncSource], { type: "application/pdf" });
+        formData.append("file", new File([dummyBlob], `${syncSource}_import.pdf`));
+      }
 
       const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
       const url = `${apiBase}/api/v1/advanced/analyze-advanced?industry=${selectedIndustry}&analysis_depth=${analysisDepth}`;
@@ -504,79 +522,119 @@ export default function AdvancedFinancialAnalysis() {
           </p>
         </div>
 
-        <div className="glass rounded-3xl p-8 mb-6 border border-white/5 shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Financial Report (PDF) <span className="text-purple-500">*</span>
-              </label>
-              <div className="relative">
-                <label htmlFor="advanced-dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer bg-white/5 hover:bg-white/10 hover:border-purple-500/50 transition-all">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-3 text-slate-400" />
-                    <p className="mb-2 text-sm text-slate-400">
-                      {file ? <span className="font-semibold text-purple-400">{file.name}</span> : <span><span className="font-semibold">Click to upload</span> or drag and drop</span>}
-                    </p>
-                    <p className="text-xs text-slate-500">PDF, MAX 20MB</p>
-                  </div>
-                  <input id="advanced-dropzone-file" type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
-                </label>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Industry (Optional)
-                </label>
-                <select
-                  value={selectedIndustry}
-                  onChange={(e) => setSelectedIndustry(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="">Select Industry</option>
-                  {industries.map(industry => (
-                    <option key={industry.value} value={industry.value}>
-                      {industry.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Analysis Depth
-                </label>
-                <select
-                  value={analysisDepth}
-                  onChange={(e) => setAnalysisDepth(e.target.value as any)}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="basic">Basic</option>
-                  <option value="standard">Standard</option>
-                  <option value="comprehensive">Comprehensive</option>
-                </select>
-              </div>
-            </div>
+        <div className="glass rounded-2xl p-8 border border-white/10 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"></div>
+          
+          <div className="flex gap-4 mb-6 pb-6 border-b border-white/10">
+            <button
+              onClick={() => setSyncSource("pdf")}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${syncSource === "pdf" ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+            >
+              PDF Upload
+            </button>
+            <button
+              onClick={() => setSyncSource("quickbooks")}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${syncSource === "quickbooks" ? 'bg-green-600 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+            >
+              QuickBooks Sync
+            </button>
+            <button
+              onClick={() => setSyncSource("stripe")}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${syncSource === "stripe" ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+            >
+              Stripe Sync
+            </button>
           </div>
 
-          <button
-            onClick={performAdvancedAnalysis}
-            disabled={isLoading || !file}
-            className="w-full h-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-2xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-purple-500/25 flex items-center justify-center gap-3 text-lg"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-6 h-6 animate-spin" />
-                <span>Performing Advanced Analysis...</span>
-              </>
-            ) : (
-              <>
-                <Brain className="w-6 h-6" />
-                <span>Start Advanced Analysis</span>
-              </>
-            )}
-          </button>
+          {syncSource === "pdf" ? (
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-xl p-8 bg-black/20 hover:bg-white/5 transition-colors group cursor-pointer relative">
+              <input
+                type="file"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                accept=".pdf"
+                onChange={handleFileChange}
+              />
+              <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Upload className="w-8 h-8 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-medium text-white mb-2">
+                {file ? file.name : "Upload Financial Report (PDF)"}
+              </h3>
+              <p className="text-gray-400 text-sm text-center max-w-sm">
+                Upload your balance sheets, income statements, or full audit reports for deep analysis.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center border border-white/10 rounded-xl p-8 bg-black/20">
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${syncSource === 'quickbooks' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                <Activity className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-medium text-white mb-2">
+                Connect {syncSource === "quickbooks" ? "QuickBooks Online" : "Stripe"}
+              </h3>
+              <p className="text-gray-400 text-sm text-center max-w-sm mb-6">
+                Pull your real-time ledger data directly to perform predictive analysis and anomaly detection.
+              </p>
+              <button className="px-6 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all font-medium text-sm">
+                Authenticate Account
+              </button>
+            </div>
+          )}
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Industry (Optional)
+              </label>
+              <select
+                value={selectedIndustry}
+                onChange={(e) => setSelectedIndustry(e.target.value)}
+                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="">Select Industry</option>
+                {industries.map(industry => (
+                  <option key={industry.value} value={industry.value}>
+                    {industry.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Analysis Depth
+              </label>
+              <select
+                value={analysisDepth}
+                onChange={(e) => setAnalysisDepth(e.target.value as any)}
+                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="basic">Basic</option>
+                <option value="standard">Standard</option>
+                <option value="comprehensive">Comprehensive</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="mt-8">
+            <button
+              onClick={performAdvancedAnalysis}
+              disabled={isLoading || (syncSource === "pdf" && !file)}
+              className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold text-lg hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2 shadow-xl shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  {isSyncing ? `Syncing from ${syncSource}...` : 'Analyzing Data...'}
+                </>
+              ) : (
+                <>
+                  <Zap className="w-6 h-6" />
+                  Extract & Analyze Data
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -769,6 +827,51 @@ export default function AdvancedFinancialAnalysis() {
           
           {/* Risk Assessment Details */}
           {renderRiskAssessment(currentAnalysis.risk_assessment)}
+          
+          {/* Industry Benchmarking (Feature 5) */}
+          {currentAnalysis.industry_benchmarking && currentAnalysis.industry_benchmarking.length > 0 && (
+            <div className="glass rounded-2xl p-6 border border-white/10">
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                <Target className="w-6 h-6 text-blue-500" />
+                Industry Benchmarks Overview
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {currentAnalysis.industry_benchmarking.map((bm: any, idx: number) => (
+                  <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/5 relative overflow-hidden">
+                    <div className="text-sm text-gray-400 capitalize">{bm.metric?.replace(/_/g, ' ') || "Metric"}</div>
+                    <div className="font-bold text-white text-lg mt-1">{bm.startup_value || "N/A"}</div>
+                    <div className={`text-xs mt-2 font-medium bg-black/30 w-fit px-2 py-1 rounded flex items-center gap-1 ${bm.comparison === 'above_average' ? 'text-green-400' : bm.comparison === 'below_average' ? 'text-red-400' : 'text-blue-400'}`}>
+                      {bm.comparison === 'above_average' ? <TrendingUp className="w-3 h-3"/> : bm.comparison === 'below_average' ? <ArrowDownRight className="w-3 h-3"/> : <Minus className="w-3 h-3"/>}
+                      {bm.comparison?.replace(/_/g, ' ') || "Average"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Anomaly Detection Alerts (Feature 6) */}
+          {currentAnalysis.risk_assessment && currentAnalysis.risk_assessment.some(r => r.level === 'critical' || r.category.toLowerCase().includes('fraud') || r.category.toLowerCase().includes('anomaly')) && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6">
+              <h3 className="text-xl font-semibold text-red-500 mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-6 h-6" />
+                Automated Anomaly Detection
+              </h3>
+              <ul className="space-y-3">
+                {currentAnalysis.risk_assessment
+                    .filter(r => r.level === 'critical' || r.category.toLowerCase().includes('fraud') || r.category.toLowerCase().includes('anomaly'))
+                    .map((r, idx) => (
+                  <li key={idx} className="flex gap-3 text-red-100">
+                    <Zap className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block text-red-400">{r.category} detected</strong>
+                      <span className="text-sm opacity-90">{r.finding}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           
           {/* Recommendations */}
           {renderRecommendations(currentAnalysis.recommendations)}

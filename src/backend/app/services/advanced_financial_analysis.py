@@ -135,8 +135,11 @@ class AdvancedFinancialAnalyzer:
             filename=filename
         )
         
+        metrics = getattr(base_analysis, 'metrics', base_analysis.get('metrics', {}) if isinstance(base_analysis, dict) else {})
+        key_risks = getattr(base_analysis, 'key_risks', base_analysis.get('key_risks', []) if isinstance(base_analysis, dict) else [])
+        
         # Extract numeric values from metrics
-        numeric_metrics = self._extract_numeric_values(base_analysis.metrics)
+        numeric_metrics = self._extract_numeric_values(metrics)
         
         # Calculate financial ratios
         ratios = self._calculate_financial_ratios(numeric_metrics)
@@ -147,7 +150,7 @@ class AdvancedFinancialAnalyzer:
             trend_analysis = self._analyze_trends(numeric_metrics, historical_data)
         
         # Risk assessment
-        risk_assessment = self._assess_risks(numeric_metrics, ratios, base_analysis.key_risks)
+        risk_assessment = self._assess_risks(numeric_metrics, ratios, key_risks)
         
         # Industry benchmarking
         benchmarking = None

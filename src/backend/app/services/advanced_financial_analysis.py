@@ -313,8 +313,12 @@ class AdvancedFinancialAnalyzer:
         
         # Get the most recent historical data
         latest_historical = historical_data[-1]
-        historical_numeric = self._extract_numeric_values(latest_historical.metrics)
+        hist_metrics = getattr(latest_historical, 'metrics', latest_historical.get('metrics', {}) if isinstance(latest_historical, dict) else {})
+        historical_numeric = self._extract_numeric_values(hist_metrics)
         
+        if not current_metrics:
+            return trends
+
         for metric, current_value in current_metrics.items():
             if metric in historical_numeric:
                 previous_value = historical_numeric[metric]

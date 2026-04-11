@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "https://finance-app.fastapicloud.dev";
+// In production, use the deployed URL. In local dev, route through local backend.
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const nextConfig = {
   reactStrictMode: false,

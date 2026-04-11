@@ -2,6 +2,21 @@
 
 import { useState, useEffect } from "react";
 import {
+  BarChart as RechartsBarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  Legend
+} from "recharts";
+import {
   FileText,
   Upload,
   Loader2,
@@ -576,7 +591,66 @@ export default function AdvancedFinancialAnalysis() {
           {/* Financial Ratios */}
           {renderFinancialRatios(currentAnalysis.financial_ratios)}
           
-          {/* Risk Assessment */}
+          {/* Interactive Data Visualizations */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div className="glass rounded-2xl p-6 border border-white/10">
+              <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                <BarChart3 className="w-6 h-6 text-purple-500" />
+                Key Metrics Overview
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RechartsBarChart
+                    data={Object.entries(currentAnalysis.base_analysis.metrics)
+                      .slice(0, 5)
+                      .filter(([_, v]) => typeof v === 'number')
+                      .map(([k, v]) => ({
+                        name: k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                        value: v
+                      }))}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.7)', fontSize: 12}} />
+                    <YAxis stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.7)', fontSize: 12}} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'rgba(17, 24, 39, 0.9)', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                      itemStyle={{ color: '#a855f7' }}
+                      formatter={(value: any) => formatCurrency(value)}
+                    />
+                    <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                  </RechartsBarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="glass rounded-2xl p-6 border border-white/10">
+              <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                <Shield className="w-6 h-6 text-orange-500" />
+                Risk Radar
+              </h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={currentAnalysis.risk_assessment.map(r => ({
+                    subject: r.category,
+                    A: r.score,
+                    fullMark: 100,
+                  }))}>
+                    <PolarGrid stroke="rgba(255,255,255,0.2)" />
+                    <PolarAngleAxis dataKey="subject" tick={{fill: 'rgba(255,255,255,0.7)', fontSize: 12}} />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{fill: 'rgba(255,255,255,0.5)'}} />
+                    <Radar name="Risk Score" dataKey="A" stroke="#f97316" fill="#f97316" fillOpacity={0.4} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'rgba(17, 24, 39, 0.9)', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                      itemStyle={{ color: '#f97316' }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+          
+          {/* Risk Assessment Details */}
           {renderRiskAssessment(currentAnalysis.risk_assessment)}
           
           {/* Recommendations */}

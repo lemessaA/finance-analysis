@@ -9,3 +9,4 @@ __pycache__/
 sample_report.pdf
 valid_report.pdf
 test_ui.js
+src/backend/app/.env

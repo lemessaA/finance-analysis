@@ -103,14 +103,22 @@ export default function AdvancedFinancialAnalysis() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      
-      const response = await fetch(`/api/v1/advanced/analyze-advanced?industry=${selectedIndustry}&analysis_depth=${analysisDepth}`, {
+
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const url = `${apiBase}/api/v1/advanced/analyze-advanced?industry=${selectedIndustry}&analysis_depth=${analysisDepth}`;
+
+      const response = await fetch(url, {
         method: "POST",
         body: formData
       });
 
       if (!response.ok) {
-        throw new Error("Analysis failed");
+        let errorMessage = `Analysis failed (HTTP ${response.status})`;
+        try {
+          const errData = await response.json();
+          errorMessage = errData?.detail || errData?.error?.message || errorMessage;
+        } catch {}
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -126,6 +134,7 @@ export default function AdvancedFinancialAnalysis() {
       setIsLoading(false);
     }
   };
+
 
   const getHealthScoreColor = (score: number) => {
     if (score >= 85) return "text-green-500";

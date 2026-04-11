@@ -7,9 +7,9 @@ from __future__ import annotations
 import asyncio
 import re
 import statistics
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Dict, List, Optional, Tuple, Any
 import logging
 
 from app.agents.financial_analysis_agent import FinancialAnalysisAgent
@@ -173,14 +173,40 @@ class AdvancedFinancialAnalyzer:
             health_score
         )
         
+        def serialize_risk(r: RiskAssessment) -> Dict[str, Any]:
+            d = asdict(r)
+            d["level"] = r.level.value  # convert Enum to string
+            return d
+
+        def serialize_benchmark(b: IndustryBenchmark) -> Dict[str, Any]:
+            return asdict(b)
+
+        def serialize_trend(t: TrendAnalysis) -> Dict[str, Any]:
+            return asdict(t)
+
+        # Serialize base_analysis (Pydantic model)
+        if hasattr(base_analysis, "model_dump"):
+            base_dict = base_analysis.model_dump()
+        elif hasattr(base_analysis, "dict"):
+            base_dict = base_analysis.dict()
+        else:
+            base_dict = base_analysis
+
+        ratios_dict = asdict(ratios)
+        risk_list = [serialize_risk(r) for r in risk_assessment]
+        trend_list = [serialize_trend(t) for t in trend_analysis] if trend_analysis else None
+        bench_list = [serialize_benchmark(b) for b in benchmarking] if benchmarking else None
+
+        predictive_dict = asdict(predictive_insights)
+
         return {
-            "base_analysis": base_analysis,
-            "financial_ratios": ratios,
-            "trend_analysis": trend_analysis,
-            "risk_assessment": risk_assessment,
-            "industry_benchmarking": benchmarking,
+            "base_analysis": base_dict,
+            "financial_ratios": ratios_dict,
+            "trend_analysis": trend_list,
+            "risk_assessment": risk_list,
+            "industry_benchmarking": bench_list,
             "financial_health_score": health_score,
-            "predictive_insights": predictive_insights,
+            "predictive_insights": predictive_dict,
             "recommendations": recommendations,
             "analysis_metadata": {
                 "industry": industry,

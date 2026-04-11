@@ -64,12 +64,20 @@ app.add_middleware(LanguageMiddleware)
 setup_global_exception_handlers(app)
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
+# If origins contains "*", we should set allow_credentials=False for better browser compatibility
+# unless we use allow_origin_regex.
+origins = settings.ALLOWED_ORIGINS
+allow_all = "*" in origins
+
+logger.info(f"🔒 CORS: Allowed origins: {origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=origins,
+    allow_credentials=not allow_all,  # Cannot use credentials with "*" in many browsers/versions
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Response-Time", "X-Memory-Usage", "X-Memory-Delta"]
 )
 
 # ── Routers ───────────────────────────────────────────────────────────────────
